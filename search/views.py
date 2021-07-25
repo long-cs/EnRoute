@@ -25,9 +25,44 @@ class Query(View):
         now = datetime.now()
 
         directions_result = self.gmaps.directions('Los Angeles','San Francisco')
+        self.printRoute(directions_result)
 
-        print(directions_result)
+        # print(directions_result)
 
         return JsonResponse(responseData)        
         # return HttpResponse(directions_result)        
         # return JsonResponse(directions_result)        
+
+    # Debugging purposes
+    def printRoute(self,gMapsRoute):
+        directionsDict = gMapsRoute[0] # only 1 route, if there would was more locations, then there would be more than one
+        boundsDict = directionsDict['bounds'] # northeast and southwest coordinates
+
+        legsList = directionsDict['legs'] # starting,ending points and contains the steps to get there
+        legDict = legsList[0] # only 1 leg since only one starting and ending location
+
+        distance = legDict['distance']
+        duration = legDict['duration']
+        endAddress = legDict['end_address']
+        endLocation = legDict['end_location']
+        startAddress = legDict['start_address']
+        startLocation = legDict['start_location']
+
+        stepsList = legDict['steps']
+
+
+        print('Bounds:' + str(boundsDict))
+        print('Distance: ' + str(distance))
+        print('Duration: ' + str(duration))
+        print('End Address: ' + str(endAddress))
+        print('End Location: ' + str(endLocation))
+        print('Start Address: ' + str(startAddress))
+        print('Start Location: ' + str(startLocation))
+
+        for i in range(len(stepsList)):
+            step = stepsList[i]
+            stepDistance = step['distance']
+            stepDuration = step['duration']
+            stepStartLocation = step['start_location']
+            stepEndLocation = step['end_location']
+            print('Step #' + str(i) + ' Distance: ' + str(stepDistance) + ' Duration ' + str(stepDuration) + ' Start: '  + str(stepStartLocation) + ' End: ' + str(stepEndLocation))
