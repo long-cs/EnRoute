@@ -59,11 +59,12 @@ class Query(View):
         path_instance.polyline_list = json.dumps(polyline_list)
 
         # NEEDS TO CONVERT FROM MODEL TO JSON
-        # serialized_obj = serializers.serialize('json', [path_instance, ])
-
+        serialized_obj = serializers.serialize('json', [path_instance, ])
+        return HttpResponse(serialized_obj)
         # print(directions_result)
 
-        return JsonResponse(responseData)        
+        # return JsonResponse(responseData)
+        
         # return HttpResponse(directions_result)        
         # return JsonResponse(directions_result)        
 
