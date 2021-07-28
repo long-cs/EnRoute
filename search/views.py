@@ -6,36 +6,31 @@ import googlemaps
 import polyline
 from datetime import datetime
 import json
+from . import yelpClient
 from .models import Route
 from .serializers import RouteSerializer
 from django.core import serializers
 
-# Create your views here.
 class Query(View):
 
     def __init__(self):
-        self.gmapsKey = 'AIzaSyCEUcLAhX6U6pxYlcXrMkuL5XoLyd_Nfck'
-        self.gmaps = googlemaps.Client(self.gmapsKey)
+        gmapsKey = 'AIzaSyCEUcLAhX6U6pxYlcXrMkuL5XoLyd_Nfck'
+        yelpApiKey = 'zQUOW4s6iONEbQgu_NigfpfZHqFNpxOKP0N2oLrTOqxpRvJZpbD0VrNAya_8xB2otciJQVWPELDNPYAgCsrE-iuL3AHxVHny-FRe1m1VacPqKtdpG6Hx-9BJcfX4YHYx'
+        self.gmapsClient = googlemaps.Client(gmapsKey)
+        self.yelpClient = yelpClient.YelpClient(yelpApiKey)
 
     def get(self, request):
-        # <view logic>
-        # return HttpResponse('result')
-        responseData = {
-            'id': 4,
-            'name': 'Test Response',
-            'roles' : ['Admin','User']
-        }
 
+        yelpResponse = self.yelpClient.searchBusiness('restaurants', 34.0522, 118.2437) # los angeles coordinates
+        
         # Captures URL parameters
         start = request.GET.get("start", "")
         end = request.GET.get('end', "")
 
         # Request directions via public transit
-        now = datetime.now()
-
         path_instance = Route()
 
-        directions_result = self.gmaps.directions(start, end)
+        directions_result = self.gmapsClient.directions(start, end)
         
         # self.printRoute(directions_result)
 
@@ -63,11 +58,10 @@ class Query(View):
         return HttpResponse(serialized_obj)
         # print(directions_result)
 
-        # return JsonResponse(responseData)
-        
+        # return JsonResponse(responseData)        
         # return HttpResponse(directions_result)        
         # return JsonResponse(directions_result)        
-
+        
     # Debugging purposes
     def printRoute(self,gMapsRoute):
         directionsDict = gMapsRoute[0] # only 1 route, if there would was more locations, then there would be more than one
