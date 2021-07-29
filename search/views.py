@@ -7,7 +7,7 @@ import polyline
 from datetime import datetime
 import json
 from . import yelpClient
-from .models import Route
+from .models import Directions, DirectionEncoder
 from .serializers import RouteSerializer
 from django.core import serializers
 
@@ -28,15 +28,16 @@ class Query(View):
         end = request.GET.get('end', "")
 
         # Request directions via public transit
-        path_instance = Route()
+        now = datetime.now()
+
+        path = Directions()
 
         directions_result = self.gmapsClient.directions(start, end)
         
         # self.printRoute(directions_result)
 
-        curr_route = directions_result[0]['legs'][0]
 
-        # route_points is coordinates for server, polyline_list is list of strings
+        curr_route = directions_result[0]['legs'][0]
         route_points = [curr_route['start_location']]
         polyline_list = []
 
@@ -49,13 +50,16 @@ class Query(View):
         # print(route_points)
 
         # populates the model instance
-        path_instance.start_address = curr_route['start_address']
-        path_instance.end_address = curr_route['end_address']
-        path_instance.polyline_list = json.dumps(polyline_list)
+        path.setStartAddress(curr_route['start_address'])
+        path.setDestination(curr_route['end_address'])
+        path.setPolylineList(polyline_list)
 
         # NEEDS TO CONVERT FROM MODEL TO JSON
-        serialized_obj = serializers.serialize('json', [path_instance, ])
-        return HttpResponse(serialized_obj)
+        pathJSONdata = json.dumps(path, indent=4, cls=DirectionEncoder)
+
+        # HttpsResponse takes in a json type as an arguement
+        # JsonResponse takes an object converts to json then sends it
+        return HttpResponse(pathJSONdata)
         # print(directions_result)
 
         # return JsonResponse(responseData)        
