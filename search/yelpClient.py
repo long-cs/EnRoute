@@ -19,7 +19,12 @@ class YelpClient:
         url = YelpClient.SEARCH_PATH
         parameters = {'term':searchTerm, 
                       'latitude':lat, 
-                      'longitude':lon}
+                      'longitude':lon,
+                      'sort_by': "rating",
+                      'limit': 10}
+        # parameters = {
+        #     "location": "Los Angeles"
+        # }
         # doc has alot of diff options need to look into ex. radius, limit, sort_by, etc
 
         return self._make_request(url,parameters)

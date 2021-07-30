@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 from . import yelpClient
 from .models import Directions, DirectionEncoder
+from math import radians, cos, sin, asin, sqrt
 from .serializers import RouteSerializer
 from django.core import serializers
 
@@ -20,9 +21,8 @@ class Query(View):
         self.yelpClient = yelpClient.YelpClient(yelpApiKey)
 
     def get(self, request):
-
-        yelpResponse = self.yelpClient.searchBusiness('restaurants', 34.0522, 118.2437) # los angeles coordinates
         
+        # yelpResponse = self.yelpClient.searchBusiness('restaurants', 34.0522, -118.2437) # los angeles coordinates
         # Captures URL parameters
         start = request.GET.get("start", "")
         end = request.GET.get('end', "")
@@ -38,29 +38,42 @@ class Query(View):
 
 
         curr_route = directions_result[0]['legs'][0]
-        route_points = [curr_route['start_location']]
+        waypoint_distance = curr_route["distance"]["value"] // 4
+        waypoint = []
+        curr_distance = 0
+        last_coord = None
+        route_points = []
         polyline_list = []
 
         for step in curr_route['steps']:
-            route_points += polyline.decode(step['polyline']['points'])
+            path_coords = polyline.decode(step['polyline']['points'])
+            for i in path_coords:
+                if last_coord:
+                    curr_distance += self.distanceBetweenCoord(last_coord[0], last_coord[1], i[0], i[1])
+                    if curr_distance >= waypoint_distance:
+                        waypoint.append(last_coord)
+                        curr_distance = 0
+                last_coord = i    
             polyline_list.append(step['polyline']['points'])
-
-        route_points.append(curr_route['end_location'])
-
-        # print(route_points)
+        
+        yelpBuisnesses = []
+        for point in waypoint:
+            yelpResponse = self.yelpClient.searchBusiness('restaurants', point[0], point[1])
+            yelpBuisnesses.append(yelpResponse)
 
         # populates the model instance
         path.setStartAddress(curr_route['start_address'])
         path.setDestination(curr_route['end_address'])
         path.setPolylineList(polyline_list)
+        path.setBuisnesses(yelpBuisnesses)
 
         # NEEDS TO CONVERT FROM MODEL TO JSON
         pathJSONdata = json.dumps(path, indent=4, cls=DirectionEncoder)
-
+        # print(directions_result)
         # HttpsResponse takes in a json type as an arguement
         # JsonResponse takes an object converts to json then sends it
         return HttpResponse(pathJSONdata)
-        # print(directions_result)
+        
 
         # return JsonResponse(responseData)        
         # return HttpResponse(directions_result)        
@@ -100,3 +113,13 @@ class Query(View):
             stepStartLocation = step['start_location']
             stepEndLocation = step['end_location']
             print('Step #' + str(i) + ' Distance: ' + str(stepDistance) + ' Duration ' + str(stepDuration) + ' Start: '  + str(stepStartLocation) + ' End: ' + str(stepEndLocation))
+    
+    #  Haversine Formula to find distance between two (lat, lon) points
+    def distanceBetweenCoord(self, lat1, lon1, lat2, lon2):
+        # Applies radians func to all lat and lon
+        lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2 * asin(sqrt(a))
+        return 6371000 * c
