@@ -2,14 +2,14 @@ import React, {useState} from 'react'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import './Form.css'
 
-const CustomForm = ({setStartAddress, setDestination}) => {
+const SearchForm = (props) => {
     const [currentStart, setCurrentStart] = useState("")
     const [currentEnd, setCurrentEnd] = useState("")
+    const [searchTerm, setSearchTerm] = useState("")
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        setStartAddress(currentStart)
-        setDestination(currentEnd)
+        props.handleSearch(currentStart,currentEnd,searchTerm)
     }
 
     return (
@@ -25,7 +25,7 @@ const CustomForm = ({setStartAddress, setDestination}) => {
                 </FormGroup>
                 <FormGroup className='group'>
                     <Label for='pointOfInterest'> Point of Interest </Label>
-                    <Input type='interests'/>
+                    <Input type='interests' onChange={(e) => setSearchTerm(e.target.value)}/>
                 </FormGroup>
                 <Button className='button' type="submit">Search</Button>
             </Form>
@@ -33,4 +33,4 @@ const CustomForm = ({setStartAddress, setDestination}) => {
     )
 };
 
-export default CustomForm;
+export default SearchForm;
