@@ -4,13 +4,19 @@ import axios from 'axios';
 import polyline from "polyline"
 import './Map.css'
 
+const mapStyles = {
+  width: '50%',
+  height: '100%',
+};
+
 const Maps = (props) => {
-  const mapStyles = {
-      width: '30%',
-      height: '60%',
-      marginLeft: '4%',
-      marginTop: '4em',
-  };
+  const mapRef = useRef(null)
+  
+  useEffect(() => {
+      // when first mounted, scoll to results
+      mapRef.current.scrollIntoView()
+      }, [])
+
   const [polyString, setPolyString] = useState([])
   const [polylineCoord, setPolylineCoord] = useState([])
 
@@ -39,7 +45,7 @@ const Maps = (props) => {
   // for loop the polty
 
   return (
-      <div className='map'>
+      <div className='map' ref={mapRef}>
       {
         console.log(props.polyline)
         // console.log("polystring", polyString)
