@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Map, GoogleApiWrapper, Polyline, Marker } from 'google-maps-react';
-import axios from 'axios';
 import polyline from "polyline"
 import './Map.css'
 
@@ -17,19 +16,10 @@ const Maps = (props) => {
       mapRef.current.scrollIntoView()
       }, [])
 
-  const [polyString, setPolyString] = useState([])
-  const [polylineCoord, setPolylineCoord] = useState([])
-
-  useEffect(() => {
-    if (props.polyline) {
-      setPolyString(props.polyline["_polyline_list"])
-    }
-  }, [props.polyline])
-
   let fullCoords = []
   var bounds = new props.google.maps.LatLngBounds()
-  for (let i = 0; i < polyString.length; i++) {
-    let directionCoords = polyline.decode(polyString[i])
+  for (let i = 0; i < props.polyline.length; i++) {
+    let directionCoords = polyline.decode(props.polyline[i])
     const pathList = []
     for (let j = 0; j < directionCoords.length; j++) {
       const coord = {
@@ -41,13 +31,11 @@ const Maps = (props) => {
     }
     fullCoords = fullCoords.concat(pathList) 
   }
-  console.log(fullCoords)
   // for loop the polty
 
   return (
       <div className='map' ref={mapRef}>
       {
-        console.log(props.polyline)
         // console.log("polystring", polyString)
       }
       <Map

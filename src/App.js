@@ -25,7 +25,7 @@ function App() {
     if (startAddress !== "") {
       axios
         .get(`/s?start=${startAddress}&end=${destination}`)
-        .then((res) => setPolyline(res.data))
+        .then((res) => {setPolyline(res.data)})
         .catch((err) => console.log(err))
     }}, [startAddress, destination]) 
 
