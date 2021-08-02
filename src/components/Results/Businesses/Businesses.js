@@ -1,6 +1,7 @@
 // import { ListGroup, ListGroupItem } from 'reactstrap';
 import React, {useState, useEffect} from 'react';
-import {List, ListItem, ListItemText, Divider, Paper, Container, Box, Card, CardMedia, CardContent} from '@material-ui/core/';
+import {List, ListItem, ListItemText, Divider, Paper, Container, Box, Card, CardContent, CardMedia, Typography} from '@material-ui/core/';
+import {CardImg} from "reactstrap";
 import './Businesses.css'
 
 const Businesses = (props) => {
@@ -58,16 +59,22 @@ const Businesses = (props) => {
             <List component="nav" aria-label="contacts" >
                 {props.businesses.map((waypoint) => (
                     waypoint.businesses.map ((business) => (
-                        <ListItem button> 
-                           <ListItemText inset primary={business.name} secondary={business.location.display_address}/> 
-                         </ListItem>
-                        // <Card>
-                        //     <CardContent>
-                        //         <h2>{business.name}</h2>
-                        //         <h2>{business.location.display_address}</h2>
-                        //         <img src = {business.image_url}/>
-                        //     </CardContent>
-                        // </Card>
+                        // <ListItem button> 
+                        //    <ListItemText inset primary={business.name} secondary={business.location.display_address}/> 
+                        //  </ListItem>
+                        <Card className="business">
+                            <img
+                                className="photo"
+                                src = {business.image_url}
+                                alt = {business.name}
+                            />
+                            <CardContent className="content">
+                                <Typography component="h5" variant="h5">{business.name}</Typography>
+                                <Typography variant="subtitle1" color="textSecondary">
+                                    {business.location.display_address[0]}, {business.location.display_address[1]} 
+                                </Typography>
+                            </CardContent>
+                        </Card>
                     ))
                 ))}
             </List>

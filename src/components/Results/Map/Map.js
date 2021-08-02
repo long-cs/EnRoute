@@ -6,6 +6,9 @@ import './Map.css'
 const mapStyles = {
   width: '50%',
   height: '100%',
+  borderRadius: '10px',
+  marginLeft: '10px',
+  marginTop: '8px',
 };
 
 const Maps = (props) => {
@@ -58,6 +61,15 @@ const Maps = (props) => {
             name = {props.destination}
             position = {fullCoords[fullCoords.length - 1]}
           />
+          {props.businesses.map((waypoint) => (
+              waypoint.businesses.map ((business) => (
+                <Marker
+                  title={business.name}
+                  name = {business.name}
+                  position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
+                />
+              ))
+          ))}
       </Map>
       </div>
   )

@@ -6,7 +6,7 @@ import { Grid } from '@material-ui/core';
 const section = {
     // height: "100%",
     overflowY: 'auto', 
-    height:'500px',
+    height:'46.875em',
     position: 'relative'
 }
 
