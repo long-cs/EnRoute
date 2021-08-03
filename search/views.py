@@ -11,12 +11,12 @@ from .models import Directions, DirectionEncoder
 from math import radians, cos, sin, asin, sqrt
 from .serializers import RouteSerializer
 from django.core import serializers
+from django.conf import settings
 
 class Query(View):
-
     def __init__(self):
-        gmapsKey = 'AIzaSyCEUcLAhX6U6pxYlcXrMkuL5XoLyd_Nfck'
-        yelpApiKey = 'zQUOW4s6iONEbQgu_NigfpfZHqFNpxOKP0N2oLrTOqxpRvJZpbD0VrNAya_8xB2otciJQVWPELDNPYAgCsrE-iuL3AHxVHny-FRe1m1VacPqKtdpG6Hx-9BJcfX4YHYx'
+        gmapsKey = settings.GOOGLE_MAPS_API_KEY
+        yelpApiKey = settings.YELP_API
         self.gmapsClient = googlemaps.Client(gmapsKey)
         self.yelpClient = yelpClient.YelpClient(yelpApiKey)
 
