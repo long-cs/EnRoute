@@ -3,17 +3,14 @@ import React, {useRef, useEffect, useState} from 'react'
 import Map from './Map/Map'
 import Businesses from './Businesses/Businesses'
 import { Grid } from '@material-ui/core';
-const section = {
-    // height: "100%",
-    overflowY: 'auto', 
-    height:'46.875em',
-    position: 'relative'
-}
 
 // Component mainly to be a container for the maps and businesses
 const Results = (props) => {
     const [polyString, setPolyString] = useState([])
     const [businesses, setBusinesses] = useState([])
+    const [height, setHeight] = useState(window.innerHeight)
+    const heightStr = height.toString() + "px"
+    console.log(heightStr)
 
     useEffect(() => {
         if (props.polyline) {
@@ -25,14 +22,18 @@ const Results = (props) => {
     return (
         <div>
             <Grid container> {/* left half is the map, right half is the list of businesses */}
-                <Grid item xs={6}> 
+                <Grid item xs={6}>  
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
                             polyline={polyString}
                             businesses = {businesses} />
                 </Grid>
 
-                <Grid item xs={6} style={section}>
+                <Grid item xs={6} style={{
+                    overflowY: 'auto', 
+                    height:heightStr,
+                    position: 'relative'
+                }}>
                     <Businesses businesses={businesses}/>
                 </Grid>                
             </Grid>

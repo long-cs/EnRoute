@@ -12,6 +12,7 @@
     background-clip: border-box;
     border: 1px solid rgba(0,0,0,.125);
     border-radius: .25rem;
+    cursor: pointer;
 }
 
 .content {
@@ -26,6 +27,11 @@
     width: 130px;
     height: 130px;
     border-radius: 10px;
+}
+
+.rating {
+    display: flex;
+    flex-direction: row;
 }
 
 @media only screen and (max-width: 767px) {

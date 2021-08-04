@@ -1,50 +1,12 @@
 // import { ListGroup, ListGroupItem } from 'reactstrap';
 import React, {useState, useEffect} from 'react';
-import {List, ListItem, ListItemText, Divider, Paper, Container, Box, Card, CardContent, CardMedia, Typography} from '@material-ui/core/';
+import {List, ListItem, ListItemText, Divider, Paper, Container, Box, Card, CardContent, CardMedia, Typography, CardActionArea} from '@material-ui/core/';
+import {Rating} from '@material-ui/lab'
 import {CardImg} from "reactstrap";
 import './Businesses.css'
 
 const Businesses = (props) => {
-    // const data = {
-    //     businesses: [
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },                    
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },           
-    //          { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },                    
-    //         { name: 'Lorem ipsum dolor sit', address: 'consectetur adipiscing e' },
-    //         { name: 'as quis laoreet sem. ', address: 'Mauris tempor diam' },
-    //         { name: 'in venenatis felis', address: 'tincidunt nunc id ex porttitor, ut' },
-    //         { name: 'Cras ut tempus', address: 'Vestibulum non lacus' },          
-    //     ]
-    // }
-
     const [data, setData] = useState([])
-
-    // Create a lot of blank loading items, then when the businesses are recieved as aresponse, fill in the item boxes
     return (
         <div>
                    {/* How to display info, right align?List Item seems really limiting
@@ -59,10 +21,9 @@ const Businesses = (props) => {
             <List component="nav" aria-label="contacts" >
                 {props.businesses.map((waypoint) => (
                     waypoint.businesses.map ((business) => (
-                        // <ListItem button> 
-                        //    <ListItemText inset primary={business.name} secondary={business.location.display_address}/> 
-                        //  </ListItem>
-                        <Card className="business">
+                        <Card className="business" onClick={() => {
+                            window.open(business.url)
+                        }}>
                             <img
                                 className="photo"
                                 src = {business.image_url}
@@ -73,6 +34,12 @@ const Businesses = (props) => {
                                 <Typography variant="subtitle1" color="textSecondary">
                                     {business.location.display_address[0]}, {business.location.display_address[1]} 
                                 </Typography>
+                                <Typography variant="subtitle1" color="textSecondary">{business.categories[0].title}{business.categories.slice(1).map((category) => `, ${category.title}`)}</Typography>
+                                <div className="rating">
+                                <Rating name="reviews" defaultValue={business.rating} precision={0.5} readOnly/>
+                                <Typography variant="subtitle1" color="textSecondary" style={{margin: '0px 8px'}}>{business.review_count} reviews</Typography>
+                                <Typography variant="subtitle1" color="textSecondary">{business.price}</Typography>
+                                </div>
                             </CardContent>
                         </Card>
                     ))

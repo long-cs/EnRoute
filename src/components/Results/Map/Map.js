@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { Map, GoogleApiWrapper, Polyline, Marker } from 'google-maps-react';
+import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow } from 'google-maps-react';
 import polyline from "polyline"
 import './Map.css'
 
@@ -13,7 +13,36 @@ const mapStyles = {
 
 const Maps = (props) => {
   const mapRef = useRef(null)
-  
+  const [state, setState] = useState({
+    activeMarker: {},
+    seletctedPlace: {},
+    showingInfoWindow: false
+  })
+
+  const onMarkerClick = (props, marker) => {
+    setState({
+      activeMarker: marker,
+      seletctedPlace: props,
+      showingInfoWindow: true
+    })
+  }
+
+  const onInfoWindowClose = () => {
+    setState({
+      activeMarker: null,
+      showingInfoWindow: false
+    })
+  }
+
+  const onMapClicked = () => {
+    if (state.showingInfoWindow) {
+      setState({
+        activeMarker: null,
+        showingInfoWindow: false
+      })
+    } 
+  }
+
   useEffect(() => {
       // when first mounted, scoll to results
       mapRef.current.scrollIntoView()
@@ -45,6 +74,7 @@ const Maps = (props) => {
           google = {props.google}
           style={mapStyles}
           initialCenter = {fullCoords[0]}
+          onClick={onMapClicked}
           bounds={bounds}>
           <Marker
             title = {props.startAddress}
@@ -60,16 +90,31 @@ const Maps = (props) => {
             title = {props.destination}
             name = {props.destination}
             position = {fullCoords[fullCoords.length - 1]}
-          />
+          >
+          </Marker>
           {props.businesses.map((waypoint) => (
               waypoint.businesses.map ((business) => (
                 <Marker
                   title={business.name}
                   name = {business.name}
+                  photo={business.image_url}
+                  id = {business.id}
+                  url = {business.url}
+                  onClick={onMarkerClick}
                   position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
                 />
               ))
           ))}
+          <InfoWindow
+              marker={state.activeMarker}
+              onClose={onInfoWindowClose}
+              visible={state.showingInfoWindow}>
+              {state.seletctedPlace ? 
+                <div>
+                  <img src={state.seletctedPlace.photo} className="photo" alt={state.seletctedPlace.name}/>
+                  <p className="name">{state.seletctedPlace.name}</p>
+                </div>: <p></p>}
+            </InfoWindow>
       </Map>
       </div>
   )
