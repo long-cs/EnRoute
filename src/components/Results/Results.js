@@ -10,7 +10,6 @@ const Results = (props) => {
     const [businesses, setBusinesses] = useState([])
     const [height, setHeight] = useState(window.innerHeight)
     const heightStr = height.toString() + "px"
-    console.log(heightStr)
 
     useEffect(() => {
         if (props.polyline) {

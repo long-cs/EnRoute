@@ -6,7 +6,7 @@ import {CardImg} from "reactstrap";
 import './Businesses.css'
 
 const Businesses = (props) => {
-    const [data, setData] = useState([])
+    const [currID, setCurrID] = useState("")
     return (
         <div>
                    {/* How to display info, right align?List Item seems really limiting
@@ -17,13 +17,15 @@ const Businesses = (props) => {
                     {/* You can replace ListItem with any tag like Card and you'll still get a vertical list
                         of objects
                         I'd use yelp or the meetways ui design as a reference when designing the list of cards
-                    */}                  
+                    */}               
             <List component="nav" aria-label="contacts" >
                 {props.businesses.map((waypoint) => (
                     waypoint.businesses.map ((business) => (
                         <Card className="business" onClick={() => {
                             window.open(business.url)
-                        }}>
+                        }}
+                        onMouseOver={()=>setCurrID(business.id)}
+                        >
                             <img
                                 className="photo"
                                 src = {business.image_url}
@@ -36,6 +38,7 @@ const Businesses = (props) => {
                                 </Typography>
                                 <Typography variant="subtitle1" color="textSecondary">{business.categories[0].title}{business.categories.slice(1).map((category) => `, ${category.title}`)}</Typography>
                                 <div className="rating">
+                                    {/* rating doesnt update */}
                                 <Rating name="reviews" defaultValue={business.rating} precision={0.5} readOnly/>
                                 <Typography variant="subtitle1" color="textSecondary" style={{margin: '0px 8px'}}>{business.review_count} reviews</Typography>
                                 <Typography variant="subtitle1" color="textSecondary">{business.price}</Typography>

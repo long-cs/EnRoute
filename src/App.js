@@ -8,6 +8,7 @@ function App() {
   const [startAddress, setStartAddress] = useState("")
   const [destination, setDestination] = useState("")
   const [showResults, setShowResults] = React.useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
   const [polyline, setPolyline] = useState("")
 
   function handleSearch(startLocation, endLocation, searchTerm) {
@@ -18,16 +19,17 @@ function App() {
     }
     setStartAddress(startLocation)
     setDestination(endLocation)
+    setSearchTerm(searchTerm)
     setShowResults(true)
   }
 
   useEffect(() => {
     if (startAddress !== "") {
       axios
-        .get(`/s?start=${startAddress}&end=${destination}`)
+        .get(`/s?start=${startAddress}&end=${destination}&desc=${searchTerm}`)
         .then((res) => {setPolyline(res.data)})
         .catch((err) => console.log(err))
-    }}, [startAddress, destination]) 
+    }}, [startAddress, destination, searchTerm]) 
 
   return (
     <div className="App">
