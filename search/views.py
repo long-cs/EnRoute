@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from googlemaps.directions import directions
 from rest_framework import viewsets
 from django.views import View
 from django.http import HttpResponse, JsonResponse
@@ -6,7 +7,7 @@ import googlemaps
 import polyline
 from datetime import datetime
 import json
-from . import yelpClient
+from .yelpClient import YelpClient
 from .models import Directions, DirectionEncoder
 from math import radians, cos, sin, asin, sqrt
 from .serializers import RouteSerializer
@@ -18,11 +19,9 @@ class Query(View):
         gmapsKey = settings.GOOGLE_MAPS_API_KEY
         yelpApiKey = settings.YELP_API
         self.gmapsClient = googlemaps.Client(gmapsKey)
-        self.yelpClient = yelpClient.YelpClient(yelpApiKey)
+        self.yelpClient = YelpClient(yelpApiKey)
 
     def get(self, request):
-        
-        # yelpResponse = self.yelpClient.searchBusiness('restaurants', 34.0522, -118.2437) # los angeles coordinates
         # Captures URL parameters
         start = request.GET.get("start", "")
         end = request.GET.get('end', "")
@@ -33,9 +32,6 @@ class Query(View):
         path = Directions()
 
         directions_result = self.gmapsClient.directions(start, end)
-        
-        # self.printRoute(directions_result)
-
 
         curr_route = directions_result[0]['legs'][0]
         waypoint_distance = curr_route["distance"]["value"] // 4
@@ -73,47 +69,7 @@ class Query(View):
         # HttpsResponse takes in a json type as an arguement
         # JsonResponse takes an object converts to json then sends it
         return HttpResponse(pathJSONdata)
-        
 
-        # return JsonResponse(responseData)        
-        # return HttpResponse(directions_result)        
-        # return JsonResponse(directions_result)        
-        
-    # Debugging purposes
-    def printRoute(self,gMapsRoute):
-        directionsDict = gMapsRoute[0] # only 1 route, if there would was more locations, then there would be more than one
-        boundsDict = directionsDict['bounds'] # northeast and southwest coordinates
-
-        legsList = directionsDict['legs'] # starting,ending points and contains the steps to get there
-        legDict = legsList[0] # only 1 leg since only one starting and ending location
-
-        distance = legDict['distance']
-        duration = legDict['duration']
-        endAddress = legDict['end_address']
-        endLocation = legDict['end_location']
-        startAddress = legDict['start_address']
-        startLocation = legDict['start_location']
-
-        stepsList = legDict['steps']
-
-
-        print('Bounds:' + str(boundsDict))
-        print('Distance: ' + str(distance))
-        print('Duration: ' + str(duration))
-        print('End Address: ' + str(endAddress))
-        print('End Location: ' + str(endLocation))
-        print('Start Address: ' + str(startAddress))
-        print('Start Location: ' + str(startLocation))
-
-
-        for i in range(len(stepsList)):
-            step = stepsList[i]
-            stepDistance = step['distance']
-            stepDuration = step['duration']
-            stepStartLocation = step['start_location']
-            stepEndLocation = step['end_location']
-            print('Step #' + str(i) + ' Distance: ' + str(stepDistance) + ' Duration ' + str(stepDuration) + ' Start: '  + str(stepStartLocation) + ' End: ' + str(stepEndLocation))
-    
     #  Haversine Formula to find distance between two (lat, lon) points
     def distanceBetweenCoord(self, lat1, lon1, lat2, lon2):
         # Applies radians func to all lat and lon
@@ -123,3 +79,32 @@ class Query(View):
         a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
         c = 2 * asin(sqrt(a))
         return 6371000 * c
+
+class AutoComplete(View):
+    '''
+    Expected parameters: ('text','type')
+    text is the input from user to figure out what to auto complete
+    type is either 'place' or 'catagory' | default to place if not specified
+    response will be a list of strings/auto complete suggestions
+    '''
+    def get(self, request):
+        # Captures URL parameters
+        text = request.GET.get('text', '')
+        type = request.GET.get('type', 'place')
+        autoSuggestions = []
+        
+        if type == 'place':
+            gmapsKey = settings.GOOGLE_MAPS_API_KEY
+            gmapsClient = googlemaps.Client(gmapsKey)
+            placeResponse = gmapsClient.places_autocomplete(text)
+            for place in placeResponse:
+                autoSuggestions.append(place['description'])
+        else:
+            yelpApiKey = settings.YELP_API            
+            yelpClient = YelpClient(yelpApiKey)
+            yelpResponse = yelpClient.autoComplete(text)
+            categories = yelpResponse['categories']
+            for catagory in categories:
+                autoSuggestions.append(catagory['title'])
+              
+        return HttpResponse(json.dumps(autoSuggestions))

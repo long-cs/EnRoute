@@ -10,6 +10,7 @@ class YelpClient:
     BUSINESS_PATH = "/v3/businesses/{business_id}"
     PHONE_SEARCH_PATH = "/v3/businesses/search/phone"
     SEARCH_PATH = "/v3/businesses/search"
+    AUTOCOMPLETE_PATH = "/v3/autocomplete"
 
     def __init__(self, apiKey):
         self._session = requests.Session()
@@ -22,13 +23,17 @@ class YelpClient:
                       'longitude':lon,
                       'sort_by': "rating",
                       'limit': 10}
-        # parameters = {
-        #     "location": "Los Angeles"
-        # }
         # doc has alot of diff options need to look into ex. radius, limit, sort_by, etc
 
         return self._make_request(url,parameters)
     
+    def autoComplete(self, text : str):
+        url = YelpClient.AUTOCOMPLETE_PATH
+        parameters = {
+            'text':text
+        }        
+        return self._make_request(url,parameters)
+
     def _make_request(self, path, url_params=None):
         url_params = url_params if url_params is not None else {}
 
