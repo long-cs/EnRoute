@@ -26,6 +26,11 @@ class Query(View):
         start = request.GET.get("start", "")
         end = request.GET.get('end', "")
 
+        desc = request.GET.get('desc', "")
+
+        if desc == "":
+            desc = "Restaurants"
+
         # Request directions via public transit
         now = datetime.now()
 
@@ -54,7 +59,7 @@ class Query(View):
         
         yelpBuisnesses = []
         for point in waypoint:
-            yelpResponse = self.yelpClient.searchBusiness('restaurants', point[0], point[1])
+            yelpResponse = self.yelpClient.searchBusiness(desc, point[0], point[1])
             yelpBuisnesses.append(yelpResponse)
 
         # populates the model instance
