@@ -109,7 +109,10 @@ class AutoComplete(View):
             yelpClient = YelpClient(yelpApiKey)
             yelpResponse = yelpClient.autoComplete(text)
             categories = yelpResponse['categories']
+            terms = yelpResponse['terms']
             for catagory in categories:
                 autoSuggestions.append(catagory['title'])
+            for term in terms:
+                autoSuggestions.append(term['text'])
               
         return HttpResponse(json.dumps(autoSuggestions))
