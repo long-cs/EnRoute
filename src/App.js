@@ -12,13 +12,15 @@ function App() {
   const [polyline, setPolyline] = useState("")
 
   function handleSearch(startLocation, endLocation, searchTerm) {
-    if(startLocation === '' && endLocation === '') {
+    if( !startLocation  && !endLocation) {
        // It got really annoying retyping start and stop, REMOVE LATER
       startLocation = 'Los Angeles'
       endLocation = 'Santa Monica'
     }
+
     setStartAddress(startLocation)
     setDestination(endLocation)
+
     setSearchTerm(searchTerm)
     setShowResults(true)
   }
