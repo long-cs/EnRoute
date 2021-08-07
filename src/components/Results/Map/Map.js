@@ -94,17 +94,28 @@ const Maps = (props) => {
           </Marker>
           {props.businesses.map((waypoint) => (
               waypoint.businesses.map ((business) => (
+              (business.id == props.currID) ? (
                 <Marker
                   title={business.name}
                   name = {business.name}
                   photo={business.image_url}
-                  id = {business.id}
+                  key = {business.id}
+                  url = {business.url}
+                  icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" }}
+                  onClick={onMarkerClick}
+                  position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
+                />) :
+                <Marker
+                  title={business.name}
+                  name = {business.name}
+                  photo={business.image_url}
+                  key = {business.id}
                   url = {business.url}
                   onClick={onMarkerClick}
                   position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
                 />
-              ))
-          ))}
+            )))
+          )}
           <InfoWindow
               marker={state.activeMarker}
               onClose={onInfoWindowClose}

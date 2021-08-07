@@ -35,6 +35,7 @@ const SearchForm = (props) => {
                 <FormGroup className='group'>
                     <Label for='startingLocation'> Starting Address </Label>
                     {/* <Input type='address' value={currentStart} onChange={(e) => {setCurrentStart(e.target.value)}}/> */}
+                    {/* autocomplete calls the api too much, session not working*/}
                     <GooglePlacesAutocomplete 
                         apiKey={process.env.REACT_APP_GOOGLE_MAPS_API}
                         selectProps={{currentStart, onChange: setCurrentStart,}}

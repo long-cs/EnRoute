@@ -6,7 +6,7 @@ import {CardImg} from "reactstrap";
 import './Businesses.css'
 
 const Businesses = (props) => {
-    const [currID, setCurrID] = useState("")
+    // const [currID, setCurrID] = useState("")
     return (
         <div>
                    {/* How to display info, right align?List Item seems really limiting
@@ -24,7 +24,16 @@ const Businesses = (props) => {
                         <Card className="business" onClick={() => {
                             window.open(business.url)
                         }}
-                        onMouseOver={()=>setCurrID(business.id)}
+                        onMouseOver={()=>{
+                            if (props.currID !== business.id) {
+                                props.changeId(business.id)
+                                // console.log(business.id)
+                            }
+                        }}
+                        key={business.id}
+                        // onMouseOut={()=>{
+                        //     props.changeId("")
+                        // }}
                         >
                             <img
                                 className="photo"

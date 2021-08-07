@@ -9,6 +9,7 @@ const Results = (props) => {
     const [polyString, setPolyString] = useState([])
     const [businesses, setBusinesses] = useState([])
     const [height, setHeight] = useState(window.innerHeight)
+    const [currID, setCurrID] = useState("here")
     const heightStr = height.toString() + "px"
 
     useEffect(() => {
@@ -18,6 +19,10 @@ const Results = (props) => {
         }
     }, [props.polyline])
 
+    const changeId = (businessId) => {
+        setCurrID(businessId)
+    }
+
     return (
         <div>
             <Grid container> {/* left half is the map, right half is the list of businesses */}
@@ -25,7 +30,8 @@ const Results = (props) => {
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
                             polyline={polyString}
-                            businesses = {businesses} />
+                            businesses = {businesses} 
+                            currID = {currID}/>
                 </Grid>
 
                 <Grid item xs={6} style={{
@@ -33,7 +39,7 @@ const Results = (props) => {
                     height:heightStr,
                     position: 'relative'
                 }}>
-                    <Businesses businesses={businesses}/>
+                    <Businesses businesses={businesses} changeId={changeId} currID={currID}/>
                 </Grid>                
             </Grid>
         </div>
