@@ -94,7 +94,7 @@ const Maps = (props) => {
           </Marker>
           {props.businesses.map((waypoint) => (
               waypoint.businesses.map ((business) => (
-              (business.id == props.currID) ? (
+              (business.id === props.currID) ? (
                 <Marker
                   title={business.name}
                   name = {business.name}
