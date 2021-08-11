@@ -21,7 +21,7 @@ class YelpClient:
         parameters = {'term':searchTerm, 
                       'latitude':lat, 
                       'longitude':lon,
-                      'sort_by': "rating",
+                      'sort_by': "best_match",
                       'limit': 10}
         # doc has alot of diff options need to look into ex. radius, limit, sort_by, etc
 
