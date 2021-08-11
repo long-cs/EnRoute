@@ -30,7 +30,8 @@ const Results = (props) => {
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
                             polyline={polyString}
-                            businesses = {businesses} 
+                            businesses = {businesses}
+                            changeId={changeId} 
                             currID = {currID}/>
                 </Grid>
 

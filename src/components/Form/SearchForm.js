@@ -74,11 +74,11 @@ const SearchForm = (props) => {
                     />
                 </FormGroup>
                 <FormGroup className='group'>
-                    <Label for='pointOfInterest'> Point of Interest </Label>
+                    <Label for='pointOfInterest' style={{marginBottom: '4px'}}> Point of Interest </Label>
                     <Autocomplete id="searchTerm" freesolo="true" options={yelpAuto}
                     onChange={(e, fullSearchTerm) => setSearchTerm(fullSearchTerm)}
                     onInputChange={(e, newSearchTerm) => handleChangeYelp(newSearchTerm)}
-                        renderInput={(params) => <TextField {...params} className="searchTerm" variant='outlined'/>}
+                        renderInput={(params) => <TextField {...params} className="searchTerm"  variant='outlined'/>}
                     />
                      {/* <Input type='interests' onChange={(e) => setSearchTerm(e.target.value)}/> */}
                     

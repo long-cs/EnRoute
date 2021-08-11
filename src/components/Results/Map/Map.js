@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow } from 'google-maps-react';
+import { Typography} from '@material-ui/core';
 import polyline from "polyline"
 import './Map.css'
+import {Button} from 'reactstrap'
 
 const mapStyles = {
   width: '50%',
@@ -11,6 +13,14 @@ const mapStyles = {
   marginTop: '8px',
 };
 
+// const smallMapStyles = {
+//   width: '100%',
+//   height: '20%',
+//   borderRadius: '10px',
+//   marginLeft: '10px',
+//   marginTop: '8px',
+// };
+
 const Maps = (props) => {
   const mapRef = useRef(null)
   const [state, setState] = useState({
@@ -18,6 +28,10 @@ const Maps = (props) => {
     seletctedPlace: {},
     showingInfoWindow: false
   })
+  const [styles, setStyles] = useState(mapStyles)
+  const [width, setWidth] = useState(window.innerWidth)
+  
+
 
   const onMarkerClick = (props, marker) => {
     setState({
@@ -25,6 +39,7 @@ const Maps = (props) => {
       seletctedPlace: props,
       showingInfoWindow: true
     })
+    setCenter(props.position)
   }
 
   const onInfoWindowClose = () => {
@@ -63,19 +78,26 @@ const Maps = (props) => {
     }
     fullCoords = fullCoords.concat(pathList) 
   }
+
+  const [center, setCenter] = useState(fullCoords[0])
   // for loop the polty
 
   return (
-      <div className='map' ref={mapRef}>
+      <div  ref={mapRef}>
       {
         // console.log("polystring", polyString)
       }
       <Map
           google = {props.google}
-          style={mapStyles}
-          initialCenter = {fullCoords[0]}
+          
+          style={ 
+            mapStyles
+          }
+          initialCenter = {center}
           onClick={onMapClicked}
-          bounds={bounds}>
+          bounds={ bounds }
+          // zoom={11}
+          >
           <Marker
             title = {props.startAddress}
             name = {props.startAddress}
@@ -123,7 +145,9 @@ const Maps = (props) => {
               {state.seletctedPlace ? 
                 <div>
                   <img src={state.seletctedPlace.photo} className="photo" alt={state.seletctedPlace.name}/>
-                  <p className="name">{state.seletctedPlace.name}</p>
+                  <Typography variant="subtitle1" color="textPrimary">{state.seletctedPlace.name}</Typography>
+                  <Button color="danger" size="sm" active href={state.seletctedPlace.url} targer="_blank">Yelp</Button>
+                  {/*  */}
                 </div>: <p></p>}
             </InfoWindow>
       </Map>
