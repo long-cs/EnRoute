@@ -23,3 +23,17 @@ Got to .../virtualenvs/{Name of virtual env}/bin/postdeactivate
 append these lines to the postdeactivate file
 unset GOOGLE_MAPS_API_KEY
 unset YELP_API_KEY
+
+WINDOWS
+Go to .../{Name of virtual env}/Scripts/activate.bat
+append these lines to the active file
+export GOOGLE_MAPS_API_KEY='{API KEY}'
+export YELP_API_KEY='{API KEY}'
+
+Go to .../{Name of virtual env}/Scripts/deactivate.bat
+append these lines to the active file
+unset GOOGLE_MAPS_API_KEY
+unset YELP_API_KEY
+
+
+
