@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useRef} from 'react';
-import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow } from 'google-maps-react';
+import React, {useState, useEffect, useRef, useMemo} from 'react';
+import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow} from 'google-maps-react';
 import { Typography} from '@material-ui/core';
 import polyline from "polyline"
 import './Map.css'
 import {Button} from 'reactstrap'
-
+import MapMarker from './MapMarker'
 const mapStyles = {
   width: '50%',
   height: '100%',
@@ -30,8 +30,10 @@ const Maps = (props) => {
   })
   const [styles, setStyles] = useState(mapStyles)
   const [width, setWidth] = useState(window.innerWidth)
-  
-
+  const [currID, setCurrID] = useState("here")
+  const [fullCoords,setFullCoords] = useState([])
+  const [bounds, setBounds] = useState(null)
+  const [center, setCenter] = useState(fullCoords[0]) 
 
   const onMarkerClick = (props, marker) => {
     setState({
@@ -59,75 +61,72 @@ const Maps = (props) => {
   }
 
   useEffect(() => {
-      // when first mounted, scoll to results
-      mapRef.current.scrollIntoView()
-      }, [])
+    // when first mounted, scoll to results
+    mapRef.current.scrollIntoView()
 
-  let fullCoords = []
-  var bounds = new props.google.maps.LatLngBounds()
-  for (let i = 0; i < props.polyline.length; i++) {
-    let directionCoords = polyline.decode(props.polyline[i])
-    const pathList = []
-    for (let j = 0; j < directionCoords.length; j++) {
-      const coord = {
-        "lat": directionCoords[j][0],
-        "lng": directionCoords[j][1]
+    let fullCoordsArr = []
+    var boundsGoogle = new props.google.maps.LatLngBounds()
+
+    for (let i = 0; i < props.polyline.length; i++) {
+      let directionCoords = polyline.decode(props.polyline[i])
+      const pathList = []
+      for (let j = 0; j < directionCoords.length; j++) {
+        const coord = {
+          "lat": directionCoords[j][0],
+          "lng": directionCoords[j][1]
+        }
+        pathList.push(coord)
+        boundsGoogle.extend(coord)
       }
-      pathList.push(coord)
-      bounds.extend(coord)
+      fullCoordsArr = fullCoordsArr.concat(pathList) 
     }
-    fullCoords = fullCoords.concat(pathList) 
-  }
 
-  const [center, setCenter] = useState(fullCoords[0])
+    // set state on first mounted
+    setFullCoords(fullCoordsArr)
+    setBounds(boundsGoogle)
+    setCenter(fullCoordsArr[0])
+    }, [props.google.maps.LatLngBounds, props.polyline])
+
   // for loop the polty
-
-  return (
+  // use Memo will only rerender the map if the dependancy props in the array have been changed
+  return useMemo( () =>
       <div  ref={mapRef}>
-      {
-        // console.log("polystring", polyString)
-      }
-      <Map
-          google = {props.google}
-          
-          style={ 
-            mapStyles
-          }
-          initialCenter = {center}
-          onClick={onMapClicked}
-          bounds={ bounds }
-          // zoom={11}
-          >
-          <Marker
-            title = {props.startAddress}
-            name = {props.startAddress}
-            position = {fullCoords[0]}
-          />
-          <Polyline
-            path={fullCoords}
-            strokeColor="#709DFF"
-            strokeOpacity={2}
-            strokeWeight={4}/>
-          <Marker
-            title = {props.destination}
-            name = {props.destination}
-            position = {fullCoords[fullCoords.length - 1]}
-          >
-          </Marker>
-          {props.businesses.map((waypoint) => (
-              waypoint.businesses.map ((business) => (
-              (business.id === props.currID) ? (
-                <Marker
-                  title={business.name}
-                  name = {business.name}
-                  photo={business.image_url}
-                  key = {business.id}
-                  url = {business.url}
-                  icon={{url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" }}
-                  onClick={onMarkerClick}
-                  position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
-                />) :
-                <Marker
+      {/* {
+        console.log("polystring", polyString)
+      } */}
+        <Map
+            google = {props.google}
+            
+            style={ 
+              mapStyles
+            }
+            // setting center doesnt seem to affect anything? setting bounds is what moves the map
+            initialCenter = {center}
+            onClick={onMapClicked}
+            bounds={ bounds }
+            // zoom={11}       
+            >
+            <Marker
+              title = {props.startAddress}
+              name = {props.startAddress}
+              position = {fullCoords[0]}
+            />
+
+            <Polyline
+              path={fullCoords}
+              strokeColor="#709DFF"
+              strokeOpacity={2}
+              strokeWeight={4}/>
+            
+            <Marker
+              title = {props.destination}
+              name = {props.destination}
+              position = {fullCoords[fullCoords.length - 1]}
+            />
+
+            {props.businesses.map((waypoint) => (
+                waypoint.businesses.map ((business) => (
+                  <MapMarker
                   title={business.name}
                   name = {business.name}
                   photo={business.image_url}
@@ -135,26 +134,24 @@ const Maps = (props) => {
                   url = {business.url}
                   onClick={onMarkerClick}
                   position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
+                  icon={business.id === props.currID ? {url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" }: undefined}
                 />
-            )))
-          )}
-          <InfoWindow
-              marker={state.activeMarker}
-              onClose={onInfoWindowClose}
-              visible={state.showingInfoWindow}>
-              {state.seletctedPlace ? 
-                <div>
-                  <img src={state.seletctedPlace.photo} className="photo" alt={state.seletctedPlace.name}/>
-                  <Typography variant="subtitle1" color="textPrimary">{state.seletctedPlace.name}</Typography>
-                  <Button color="danger" size="sm" active href={state.seletctedPlace.url} targer="_blank">Yelp</Button>
-                  {/*  */}
-                </div>: <p></p>}
-            </InfoWindow>
-      </Map>
+              )))
+            )}
+            <InfoWindow
+                marker={state.activeMarker}
+                onClose={onInfoWindowClose}
+                visible={state.showingInfoWindow}>
+                {state.seletctedPlace ? 
+                  <div>
+                    <img src={state.seletctedPlace.photo} className="photo" alt={state.seletctedPlace.name}/>
+                    <Typography variant="subtitle1" color="textPrimary">{state.seletctedPlace.name}</Typography>
+                    <Button color="danger" size="sm" active href={state.seletctedPlace.url} targer="_blank">Yelp</Button>
+                  </div>: <p></p>}
+              </InfoWindow>          
+        </Map>
       </div>
-  )
+  ,[ center, bounds, props.startAddress, props.destination, props.polyline, props.businesses, props.currID]) // only rerender when these props has changed
 };
 
-export default GoogleApiWrapper({
-    apiKey: process.env.REACT_APP_GOOGLE_MAPS_API
-  })(Maps)
+export default GoogleApiWrapper({ apiKey: process.env.REACT_APP_GOOGLE_MAPS_API })(Maps)

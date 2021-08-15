@@ -3,7 +3,6 @@ import React, {useRef, useEffect, useState} from 'react'
 import Map from './Map/Map'
 import Businesses from './Businesses/Businesses'
 import { Grid } from '@material-ui/core';
-
 // sets a limit that the function that's passed in is limited to execute every x ms
 // used when resizing Height for Businesses. Resizing for every single pixel lags the browser a bit
 function debounce(fn, ms) {
@@ -16,13 +15,11 @@ function debounce(fn, ms) {
       }, ms)
     };
   }
-  
 // Component mainly to be a container for the maps and businesses
 const Results = (props) => {
-
+    const [height, setHeight] = useState(window.innerHeight)
     const [polyString, setPolyString] = useState([])
     const [businesses, setBusinesses] = useState([])
-    const [height, setHeight] = useState(window.innerHeight)
     const [currID, setCurrID] = useState("here")
     const heightStr = height.toString() + "px"
 
@@ -31,7 +28,7 @@ const Results = (props) => {
             setPolyString(props.polyline["_polyline_list"])
             setBusinesses(props.polyline["_buisnesses"])
         }
-
+        
         // resizes the height of Businesses every 100ms
         const debouncedHandleResize = debounce(function handleResize() {
             setHeight(window.innerHeight)
@@ -45,10 +42,10 @@ const Results = (props) => {
              // If we did not remove listener, then everytime React redraws, it will add another listener
              // causing it to have hundreds/thousands of listeners if they are never removed
             window.removeEventListener('resize', debouncedHandleResize)
-        }
+        }        
     }, [props.polyline])
 
-    const changeId = (businessId) => {
+    const changeId = (businessId) => {        
         setCurrID(businessId)
     }
     
@@ -61,16 +58,19 @@ const Results = (props) => {
                             polyline={polyString}
                             businesses = {businesses}
                             changeId={changeId} 
-                            currID = {currID}/>
+                            currID = {currID}
+                            />
                 </Grid>
-
                 <Grid item xs={6} style={{
-                    overflowY: 'auto', 
-                    height:heightStr,
-                    position: 'relative'
-                }}>
-                    <Businesses businesses={businesses} changeId={changeId} currID={currID}/>
-                </Grid>                
+                        overflowY: 'auto', 
+                        height:heightStr,
+                        position: 'relative'
+                    }}>
+                <Businesses businesses={businesses} 
+                            changeId={changeId} 
+                            currID={currID}
+                            />
+        </Grid>
             </Grid>
         </div>
     )
