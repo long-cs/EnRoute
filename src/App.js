@@ -17,21 +17,34 @@ function App() {
       startLocation = 'Los Angeles'
       endLocation = 'Santa Monica'
     }
+    
 
     setStartAddress(startLocation)
     setDestination(endLocation)
-
     setSearchTerm(searchTerm)
+    // console.log(startAddress)
+    // console.log(destination)
+    axios
+    .get(`/s/query?start=${startLocation}&end=${endLocation}&desc=${searchTerm}`)
+    // .get(`/s/query?start=Los Angeles&end=Santa Monica&desc=${searchTerm}`)
+    .then((res) => {  
+      console.log(res.data)
+      setPolyline(res.data)
+    })
+    .catch((err) => console.log(err))
     setShowResults(true)
   }
 
-  useEffect(() => {
-    if (startAddress !== "") {
-      axios
-        .get(`/s?start=${startAddress}&end=${destination}&desc=${searchTerm}`)
-        .then((res) => {setPolyline(res.data)})
-        .catch((err) => console.log(err))
-    }}, [startAddress, destination, searchTerm]) 
+  // useEffect(() => {
+  //   if (startAddress !== "") {
+  //     axios
+  //       .get(`/s?start=${startAddress}&end=${destination}&desc=${searchTerm}`)
+  //       .then((res) => {  
+  //         console.log(res.data)
+  //         setPolyline(res.data)
+  //       })
+  //       .catch((err) => console.log(err))
+  //   }}, [startAddress, destination, searchTerm]) 
 
   return (
     <div className="App">

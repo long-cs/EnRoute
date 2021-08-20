@@ -24,7 +24,7 @@ const SearchForm = (props) => {
     }
 
     const handleChangeYelp = (newSearchTerm) => {
-        if (newSearchTerm !== "") {
+        if (newSearchTerm !== "") {         
             axios
                 .get(`/s/autocomplete?text=${newSearchTerm}&type=yelp`)
                 .then((res) => {setYelpAuto(res.data)})

@@ -4,8 +4,14 @@ import './index.css';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import reportWebVitals from './reportWebVitals';
+import axios from 'axios';
+
+axios.defaults.baseURL = "http://184.169.242.37:8000";
+axios.defaults.headers.common['Authorization'] = 'AUTH TOKEN';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 ReactDOM.render(
+  //  "proxy": "http://184.169.242.37:8000",
   // <React.StrictMode>
     <App />
   // </React.StrictMode>

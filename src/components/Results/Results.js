@@ -27,7 +27,6 @@ const Results = (props) => {
         if (props.polyline) {
             setPolyString(props.polyline["_polyline_list"])
             setBusinesses(props.polyline["_buisnesses"])
-            console.log(businesses)
         }
         
         // resizes the height of Businesses every 100ms
