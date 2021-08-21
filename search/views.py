@@ -21,7 +21,7 @@ class Query(View):
         self.gmapsClient = googlemaps.Client(gmapsKey)
         self.yelpClient = YelpClient(yelpApiKey)
 
-    def get(self, request):
+    def get(self, request):                
         # Captures URL parameters
         start = request.GET.get("start", "")
         end = request.GET.get('end', "")
@@ -35,9 +35,7 @@ class Query(View):
         now = datetime.now()
 
         path = Directions()
-
         directions_result = self.gmapsClient.directions(start, end)
-
         curr_route = directions_result[0]['legs'][0]
         waypoint_distance = curr_route["distance"]["value"] // 4
         waypoint = []
@@ -74,7 +72,7 @@ class Query(View):
         # HttpsResponse takes in a json type as an arguement
         # JsonResponse takes an object converts to json then sends it
         return HttpResponse(pathJSONdata)
-
+    
     #  Haversine Formula to find distance between two (lat, lon) points
     def distanceBetweenCoord(self, lat1, lon1, lat2, lon2):
         # Applies radians func to all lat and lon

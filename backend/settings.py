@@ -29,7 +29,8 @@ YELP_API = os.environ.get('YELP_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['184.169.242.37', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -132,6 +133,12 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
         
-CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+# CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOWED_ORIGINS = [
+     "http://localhost:3000",
+     "http://localhost:5000",
+     "https://enroutefrontend.s3.us-east-2.amazonaws.com",
+     "https://prod.d3h8kjalzloe0d.amplifyapp.com",
+     "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
 ]
