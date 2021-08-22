@@ -44,3 +44,7 @@ Go to .../{Name of virtual env}/Scripts/deactivate.bat\
 append these lines to the active file\
 unset GOOGLE_MAPS_API_KEY\
 unset YELP_API_KEY
+
+# Production
+docker-compose -f docker-compose.prod.yml down -v
+docker-compose -f docker-compose.prod.yml up -d --build

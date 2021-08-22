@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app/server
 
 # Install Python dependencies
+RUN pip install --upgrade pip
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
@@ -18,4 +19,4 @@ EXPOSE 8000
 
 # Be sure to use 0.0.0.0 for the host within the Docker container,
 # otherwise the browser won't be able to find it
-CMD python manage.py runserver 0.0.0.0:8000
+# CMD python manage.py runserver 0.0.0.0:8000

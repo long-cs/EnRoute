@@ -142,3 +142,8 @@ CORS_ALLOWED_ORIGINS = [
      "https://prod.d3h8kjalzloe0d.amplifyapp.com",
      "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
 ]
+
+# Folder for static files
+# We dont serve static files, it gets more complicated serving static files in production. but we aren't doing it
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
