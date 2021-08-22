@@ -46,5 +46,5 @@ unset GOOGLE_MAPS_API_KEY\
 unset YELP_API_KEY
 
 # Production
-docker-compose -f docker-compose.prod.yml down -v
-docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml down -v  // This will close docker instance \
+docker-compose -f docker-compose.prod.yml up -d --build 
