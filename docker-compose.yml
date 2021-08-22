@@ -1,8 +1,20 @@
 version: '3.7'
-# Runs the built-in django server
+
 services:
+  nginx:
+    build: ./nginx
+    platform: linux/x86_64
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+    image: longmyapi/nginx
   web:
     build: ./
-    command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - 8000:8000
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    platform: linux/x86_64
+    env_file:
+      - ../env_enroute
+    expose:
+      - 8000
+    image: longmyapi/server
