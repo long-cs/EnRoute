@@ -134,7 +134,7 @@ const Maps = (props) => {
                   url = {business.url}
                   onClick={onMarkerClick}
                   position={{"lat":business.coordinates.latitude, "lng":business.coordinates.longitude}}
-                  icon={business.id === props.currID ? {url:"http://maps.google.com/mapfiles/ms/icons/blue-dot.png" }: undefined}
+                  icon={business.id === props.currID ? {url:"https://maps.google.com/mapfiles/ms/icons/blue-dot.png" }: undefined}
                 />
               )))
             )}

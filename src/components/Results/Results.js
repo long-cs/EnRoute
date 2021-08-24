@@ -52,7 +52,7 @@ const Results = (props) => {
     return (
         <div>
             <Grid container> {/* left half is the map, right half is the list of businesses */}
-                <Grid item xs={6}>  
+                <Grid item xs={6}>   
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
                             polyline={polyString}

@@ -28,7 +28,6 @@ function App() {
     .get(`/s/query?start=${startLocation}&end=${endLocation}&desc=${searchTerm}`)
     // .get(`/s/query?start=Los Angeles&end=Santa Monica&desc=${searchTerm}`)
     .then((res) => {  
-      console.log(res.data)
       setPolyline(res.data)
     })
     .catch((err) => console.log(err))
