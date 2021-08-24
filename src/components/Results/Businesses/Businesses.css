@@ -34,6 +34,7 @@
     flex-direction: row;
 }
 
+
 @media only screen and (max-width: 767px) {
     .photo {
         min-width: 90px;

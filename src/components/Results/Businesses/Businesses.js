@@ -20,7 +20,7 @@ const Businesses = (props) => {
                     <CircularProgress/>
                 </Box>            
             :
-            <List component="nav" aria-label="contacts" >
+            <List className="businessList" component="nav" aria-label="contacts" >
                 {props.businesses.map((waypoint) => (
                     waypoint.businesses.map ((business) => (
                         <Card className="business" onClick={() => {
