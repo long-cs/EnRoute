@@ -13,14 +13,15 @@ const mapStyles = {
   marginTop: '8px',
 };
 
-// const smallMapStyles = {
-//   width: '100%',
-//   height: '40%',
-//   borderRadius: '10px',
-//   marginLeft: '10px',
-//   marginTop: '8px',
-//   position: 'relative'
-// };
+const smallMapStyles = {
+  width: '100%',
+  height: '40%',
+  borderRadius: '10px',
+  marginLeft: '10px',
+  marginTop: '8px',
+  marginBottom: '10em',
+  position: 'relative'
+};
 
 const Maps = (props) => {
   const mapRef = useRef(null)
@@ -29,7 +30,7 @@ const Maps = (props) => {
     seletctedPlace: {},
     showingInfoWindow: false
   })
-  const [styles, setStyles] = useState(mapStyles)
+  const [styles, setStyles] = useState(window.innerWidth >= 420 ? mapStyles : smallMapStyles)
   const [width, setWidth] = useState(window.innerWidth)
   const [currID, setCurrID] = useState("here")
   const [fullCoords,setFullCoords] = useState([])

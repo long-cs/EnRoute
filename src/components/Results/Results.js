@@ -50,8 +50,19 @@ const Results = (props) => {
     }
     
     return (
+        window.innerWidth >= 420 ?
         <div>
             <Grid container> {/* left half is the map, right half is the list of businesses */}
+                <Grid item xs={6} style={{
+                        overflowY: 'auto', 
+                        height:heightStr,
+                        position: 'relative'
+                    }}>
+                    <Businesses businesses={businesses} 
+                                changeId={changeId} 
+                                currID={currID}
+                                />
+                </Grid>
                 <Grid item xs={6}>   
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
@@ -61,17 +72,27 @@ const Results = (props) => {
                             currID = {currID}
                             />
                 </Grid>
-                <Grid item xs={6} style={{
-                        overflowY: 'auto', 
-                        height:heightStr,
-                        position: 'relative'
-                    }}>
-                <Businesses businesses={businesses} 
-                            changeId={changeId} 
-                            currID={currID}
-                            />
-                </Grid>
             </Grid>
+        </div> :
+        <div style={{display: 'flex', flexDirection:'column'}}>
+            <div style={{marginBottom: '18em'}}>
+            <Map tartAddress={props.startAddress} 
+                destination={props.destination}
+                polyline={polyString}
+                businesses = {businesses}
+                changeId={changeId} 
+                currID = {currID}/>
+            </div>
+            <div style={{
+                        overflowY: 'auto', 
+                        height:600,
+                        }}>
+            <Businesses className = "businesses"
+                        businesses={businesses} 
+                        changeId={changeId} 
+                        currID={currID}
+            />
+            </div>
         </div>
     )
 };
