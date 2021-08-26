@@ -70,7 +70,7 @@ const Results = (props) => {
                             changeId={changeId} 
                             currID={currID}
                             />
-        </Grid>
+                </Grid>
             </Grid>
         </div>
     )

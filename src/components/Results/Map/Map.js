@@ -15,10 +15,11 @@ const mapStyles = {
 
 // const smallMapStyles = {
 //   width: '100%',
-//   height: '20%',
+//   height: '40%',
 //   borderRadius: '10px',
 //   marginLeft: '10px',
 //   marginTop: '8px',
+//   position: 'relative'
 // };
 
 const Maps = (props) => {
@@ -98,10 +99,10 @@ const Maps = (props) => {
             google = {props.google}
             
             style={ 
-              mapStyles
+              styles
             }
             // setting center doesnt seem to affect anything? setting bounds is what moves the map
-            initialCenter = {center}
+            center = {center}
             onClick={onMapClicked}
             bounds={ bounds }
             // zoom={11}       
