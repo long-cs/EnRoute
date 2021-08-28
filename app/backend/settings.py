@@ -21,20 +21,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&thcpa4=o(cp+%kpef2m1=roa^w+j9^8d$8vv3r0uwav(_l^g*'
-
+SECRET_KEY = os.environ.get('SECRET_KEY')
 GOOGLE_MAPS_API_KEY = os.environ.get('GOOGLE_MAPS_API_KEY')
 YELP_API = os.environ.get('YELP_API_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # ALLOWED_HOSTS = ['184.169.242.37', 'localhost', '127.0.0.1']
 ALLOWED_HOSTS = ["*"]
 
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -132,16 +131,17 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-        
-# CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = [
-     "http://localhost:3000",
-     "http://localhost:5000",
-     "https://enroutefrontend.s3.us-east-2.amazonaws.com",
-     "https://prod.d3h8kjalzloe0d.amplifyapp.com",
-     "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
-]
+CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#      "https://www.whatsenroute.org",
+#      "http://localhost:3000",
+#      "http://localhost:5000",
+#      "https://enroutefrontend.s3.us-east-2.amazonaws.com",
+#      "https://prod.d3h8kjalzloe0d.amplifyapp.com",
+#      "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
+# ]
 
 # Folder for static files
 # We dont serve static files, it gets more complicated serving static files in production. but we aren't doing it

@@ -1,20 +1,26 @@
 version: '3.7'
 
 services:
-  nginx:
-    build: ./nginx
-    platform: linux/x86_64
-    ports:
-      - 1337:80
-    depends_on:
-      - web
-    image: longmyapi/nginx
   web:
-    build: ./
-    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
-    platform: linux/x86_64
+    build: ./app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./app/:/usr/src/app/
+    ports:
+      - 8000:8000
     env_file:
-      - ../env_enroute
-    expose:
-      - 8000
-    image: longmyapi/server
+      - ./.env.dev
+      - ./.env_enroute
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+
+volumes:
+  postgres_data:
