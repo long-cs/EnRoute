@@ -28,8 +28,27 @@ YELP_API = os.environ.get('YELP_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
-# ALLOWED_HOSTS = ['184.169.242.37', 'localhost', '127.0.0.1']
-ALLOWED_HOSTS = ["*"]
+if DEBUG == 1:
+    ALLOWED_HOSTS = ["*"]
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+    # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")    
+    CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS").split(" ")    
+
+    # CORS_ALLOWED_ORIGINS = [
+    #     "https://www.whatsenroute.org",
+    #     "http://localhost:3000",
+    #     "http://localhost:5000",
+    #     "https://enroutefrontend.s3.us-east-2.amazonaws.com",
+    #     "https://prod.d3h8kjalzloe0d.amplifyapp.com",
+    #     "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
+    # ]
+
+    # TODO REMOVE THESE
+    ALLOWED_HOSTS = ["*"]
+    CORS_ALLOW_ALL_ORIGINS = True    
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -131,17 +150,6 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOW_ALL_ORIGINS = True
-
-# CORS_ALLOWED_ORIGINS = [
-#      "https://www.whatsenroute.org",
-#      "http://localhost:3000",
-#      "http://localhost:5000",
-#      "https://enroutefrontend.s3.us-east-2.amazonaws.com",
-#      "https://prod.d3h8kjalzloe0d.amplifyapp.com",
-#      "https://testbranch.dbaowx1zr1h9m.amplifyapp.com"
-# ]
 
 # Folder for static files
 # We dont serve static files, it gets more complicated serving static files in production. but we aren't doing it

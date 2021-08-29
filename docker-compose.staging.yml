@@ -2,8 +2,10 @@ version: '3.7'
 
 services:
   web:
+    image: longmyapi/enroute_server
+    platform: linux/x86_64
     build:
-      context: ./app
+      context: ./app            
       dockerfile: Dockerfile.prod
     command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
     volumes:
@@ -12,17 +14,11 @@ services:
     expose:
       - 8000
     env_file:
-      - .env.staging
+      - .env_server
       - .env_enroute
-    depends_on:
-      - db
-  db:
-    image: postgres:12.0-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env.staging.db
   nginx-proxy:
+    image: longmyapi/nginx-proxy
+    platform: linux/x86_64
     container_name: nginx-proxy
     build: nginx
     restart: always
@@ -51,7 +47,6 @@ services:
       - nginx-proxy
 
 volumes:
-  postgres_data:
   static_volume:
   media_volume:
   certs:
