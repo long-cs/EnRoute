@@ -1,4 +1,3 @@
-import React, {useMemo, useState} from 'react';
 import { Marker } from "google-maps-react";
 
 class MapMarker extends Marker

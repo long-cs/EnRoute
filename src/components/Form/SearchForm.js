@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Button, Form, FormGroup, Label, Input, Card, CardImg } from 'reactstrap'
+import { Button, Form, FormGroup, Label, Card, CardImg } from 'reactstrap'
 import { TextField } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
@@ -16,8 +16,6 @@ const SearchForm = (props) => {
     const [yelpAuto, setYelpAuto] = useState([])
     const [backgroundImages, setBackgroundImages] = useState([])
     const [current, setCurrent] = useState(0)
-    // const [addresses, setAddresses] = useState([])
-    // const [sessionToken, setSessionToken] = useState('')
 
     useEffect(() => {
         if (window.innerWidth >= 724) {
@@ -64,8 +62,6 @@ const SearchForm = (props) => {
                 <Form className='form' onSubmit={handleSubmit}>
                     <FormGroup className='group'>
                         <Label for='startingLocation'> Starting Address </Label>
-                        {/* <Input type='address' value={currentStart} onChange={(e) => {setCurrentStart(e.target.value)}}/> */}
-                        {/* autocomplete calls the api too much, session not working*/}
                         <GooglePlacesAutocomplete 
                             apiKey={API_KEY}
                             selectProps={{currentStart, onChange: setCurrentStart,}}
@@ -87,8 +83,6 @@ const SearchForm = (props) => {
                         onInputChange={(e, newSearchTerm) => handleChangeYelp(newSearchTerm)}
                             renderInput={(params) => <TextField {...params} className="searchTerm"  variant='outlined'/>}
                         />
-                        {/* <Input type='interests' onChange={(e) => setSearchTerm(e.target.value)}/> */}
-                        
                     </FormGroup>
                     <Button className='button' type="submit">Search</Button>
                 </Form>

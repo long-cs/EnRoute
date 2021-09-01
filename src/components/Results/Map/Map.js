@@ -30,8 +30,7 @@ const Maps = (props) => {
     seletctedPlace: {},
     showingInfoWindow: false
   })
-  const [styles, setStyles] = useState(window.innerWidth >= 420 ? mapStyles : smallMapStyles)
-  const [width, setWidth] = useState(window.innerWidth)
+  const [styles, setStyles] = useState(window.innerWidth >= 640 ? mapStyles : smallMapStyles)
   const [currID, setCurrID] = useState("here")
   const [fullCoords,setFullCoords] = useState([])
   const [bounds, setBounds] = useState(null)

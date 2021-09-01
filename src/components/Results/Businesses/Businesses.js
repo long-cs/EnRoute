@@ -1,8 +1,6 @@
-// import { ListGroup, ListGroupItem } from 'reactstrap';
-import React, {useState, useEffect} from 'react';
-import {List, CircularProgress, Box, ListItem, ListItemText, Divider, Paper, Container, Card, CardContent, CardMedia, Typography, CardActionArea, Grid} from '@material-ui/core/';
+import React from 'react';
+import {List, CircularProgress, Box, Card, CardContent, Typography} from '@material-ui/core/';
 import {Rating} from '@material-ui/lab'
-import {CardImg} from "reactstrap";
 import './Businesses.css'
 
 
@@ -32,9 +30,6 @@ const Businesses = (props) => {
                             }
                         }}
                         key={business.id}
-                        // onMouseOut={()=>{
-                        //     props.changeId("")
-                        // }}
                         >
                             <img
                                 className="photo"

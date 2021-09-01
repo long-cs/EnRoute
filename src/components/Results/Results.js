@@ -1,5 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react'
-// import { Container, Row, Col } from 'reactstrap';
+import React, {useEffect, useState} from 'react'
 import Map from './Map/Map'
 import Businesses from './Businesses/Businesses'
 import { Grid } from '@material-ui/core';
@@ -50,7 +49,7 @@ const Results = (props) => {
     }
     
     return (
-        window.innerWidth >= 420 ?
+        window.innerWidth >= 640 ?
         <div>
             <Grid container> {/* left half is the map, right half is the list of businesses */}
                 <Grid item xs={6} style={{
