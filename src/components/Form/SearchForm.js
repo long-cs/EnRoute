@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import { Button, Form, FormGroup, Label, Card, CardImg } from 'reactstrap'
+import { Form, FormGroup, Label, Button, Card, CardImg } from 'reactstrap'
 import { TextField } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import axios from 'axios'
 import './Form.css'
+import logo from '../../logo.png'
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API
 
@@ -60,6 +61,9 @@ const SearchForm = (props) => {
             </div>
             <div className='root'>
                 <Form className='form' onSubmit={handleSubmit}>
+                    <div className="banner">
+                        <CardImg className='logo' style={{width: '50%'}} src={logo}/>
+                    </div>
                     <FormGroup className='group'>
                         <Label for='startingLocation'> Starting Address </Label>
                         <GooglePlacesAutocomplete 
