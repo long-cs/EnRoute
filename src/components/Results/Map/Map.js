@@ -6,7 +6,7 @@ import './Map.css'
 import {Button} from 'reactstrap'
 import MapMarker from './MapMarker'
 const mapStyles = {
-  width: '50%',
+  width: '100%',
   height: '100%',
   borderRadius: '10px',
   marginLeft: '10px',

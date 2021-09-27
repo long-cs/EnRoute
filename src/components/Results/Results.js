@@ -51,7 +51,7 @@ const Results = (props) => {
     return (
         window.innerWidth >= 640 ?
         <div>
-            <Grid container> {/* left half is the map, right half is the list of businesses */}
+            <Grid container> {/* right half is the map, left half is the list of businesses */}
                 <Grid item xs={6} style={{
                         overflowY: 'auto', 
                         height:heightStr,
@@ -62,7 +62,10 @@ const Results = (props) => {
                                 currID={currID}
                                 />
                 </Grid>
-                <Grid item xs={6}>   
+                <Grid item xs={6} 
+                    style={{
+                        position: 'relative'
+                    }}>   
                     <Map startAddress={props.startAddress} 
                             destination={props.destination}
                             polyline={polyString}

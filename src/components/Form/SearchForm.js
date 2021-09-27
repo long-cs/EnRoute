@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react'
-import { Form, FormGroup, Label, Button, Card, CardImg } from 'reactstrap'
-import { TextField } from '@material-ui/core'
+import React, {useState, useEffect, Image} from 'react'
+import { Form, FormGroup, Label, Button, Card, CardImg, CardImgOverlay} from 'reactstrap'
+import { TextField, Grid, Box, Fade } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import axios from 'axios'
@@ -8,7 +8,7 @@ import './Form.css'
 import logo from '../../logo.png'
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API
-
+const imgFadeDuration = 10000 // 10 seconds
 
 const SearchForm = (props) => {
     const [currentStart, setCurrentStart] = useState("")
@@ -16,20 +16,27 @@ const SearchForm = (props) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [yelpAuto, setYelpAuto] = useState([])
     const [backgroundImages, setBackgroundImages] = useState([])
-    const [current, setCurrent] = useState(0)
+    const [currBgImgIndx, setCurrBgImgIndx] = useState(0) // current background image index
+    const [currBgImgFilePath, setCurrBgImgFilePath] = useState("")
+    const [onMounted,setMounted] = useState(true)
 
     useEffect(() => {
         if (window.innerWidth >= 724) {
-        setBackgroundImages(importAll(require.context('./images/', false, /\.(png|jpe?g|svg)$/)))
+            const bgImages = importAll(require.context('./images/', false, /\.(png|jpe?g|svg)$/))
+            setBackgroundImages(bgImages)
+            setCurrBgImgFilePath(bgImages[0]['default'])
+            console.log(bgImages)
         }
     }, [])
 
-    useEffect(() => {
+    useEffect(() => {        
         const interval = setInterval(() => {
-            setCurrent(current === backgroundImages.length - 1 ? 0: current + 1);
-        }, 180000)
+            setCurrBgImgIndx(currBgImgIndx === backgroundImages.length - 1 ? 0: currBgImgIndx + 1);
+        }, imgFadeDuration)   
+
+        setMounted(false)
         return () => clearInterval (interval)
-    }, [current, backgroundImages]);
+    }, [currBgImgIndx, backgroundImages]);
 
     function importAll(r) {
         return r.keys().map(r);
@@ -50,20 +57,57 @@ const SearchForm = (props) => {
         }
     }
 
-    return (
-        <div>
-            <div className="slider">
-                {
-                backgroundImages.map((image, index) => (
-                    <Card className={index === current ? "active": "notActive"} key = {index}>
-                        {index === current && (<CardImg src={image["default"]} className={"background_photo"}/>)}
-                    </Card>))}   
-            </div>
+    return ( 
+
+        <Box height='100vh' width='100vw'>
+            <Fade in={onMounted} appear={false} timeout={imgFadeDuration}>
+                <Box 
+                    component='img'
+                    sx={{
+                        position: 'absolute',
+                        display: 'flex',
+                        height: '100vh',
+                        width: '100vw',
+                        opacity: 0.4,
+                        filter: 'blur(2px) brightness(0.7)'
+                    }}
+                    alt='Background image mising'
+                    src={'/static/media/toa-heftiba-W6sqUYlJRiw-unsplash.75089d21.jpg'}>
+                </Box>                 
+            </Fade>
+            { 
+                //Background Images
+            }
+            {backgroundImages.map((image, index) => (
+                <Fade in={index === currBgImgIndx} timeout={imgFadeDuration}>
+                    {/* <BackgroundImage image={image['default']}/> */}
+                    <Box 
+                        component='img'
+                        sx={{
+                            position: 'absolute',
+                            display: 'flex',
+                            height: '100vh',
+                            width: '100vw',
+                            opacity: 0.4,
+                            filter: 'blur(2px) brightness(0.7)'
+                        }}
+                        alt='Background image mising'
+                        src={image['default']}>
+                    </Box>                      
+                </Fade>
+            ))}   
+
             <div className='root'>
                 <Form className='form' onSubmit={handleSubmit}>
-                    <div className="banner">
-                        <CardImg className='logo' style={{width: '50%'}} src={logo}/>
-                    </div>
+                    <Box display="flex"
+                            justifyContent="center"
+                            alignItems="center">
+                        {
+                         //Logo Image 
+                        }
+                        <CardImg style={{width:'50%',maxWidth:'800px'}} src={logo}/>
+                    </Box>                            
+
                     <FormGroup className='group'>
                         <Label for='startingLocation'> Starting Address </Label>
                         <GooglePlacesAutocomplete 
@@ -71,7 +115,8 @@ const SearchForm = (props) => {
                             selectProps={{currentStart, onChange: setCurrentStart,}}
                             withSessionToken={true}
                         />
-                    </FormGroup>
+                    </FormGroup>                            
+
                     <FormGroup className='group'>
                         <Label for='destination'> Destination </Label>
                         <GooglePlacesAutocomplete 
@@ -79,7 +124,8 @@ const SearchForm = (props) => {
                             selectProps={{currentEnd, onChange: setCurrentEnd,}}
                             withSessionToken={true}
                         />
-                    </FormGroup>
+                    </FormGroup>                            
+
                     <FormGroup className='group'>
                         <Label for='pointOfInterest' style={{marginBottom: '4px'}}> Point of Interest </Label>
                         <Autocomplete id="searchTerm" freesolo="true" options={yelpAuto}
@@ -87,11 +133,12 @@ const SearchForm = (props) => {
                         onInputChange={(e, newSearchTerm) => handleChangeYelp(newSearchTerm)}
                             renderInput={(params) => <TextField {...params} className="searchTerm"  variant='outlined'/>}
                         />
-                    </FormGroup>
-                    <Button className='button' type="submit">Search</Button>
+                    </FormGroup>                            
+
+                    <Button className='button' type="submit">Search</Button>                        
                 </Form>
             </div>
-        </div>
+        </Box> 
     )
 };
 
