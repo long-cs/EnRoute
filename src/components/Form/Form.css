@@ -43,10 +43,22 @@
   padding: 1em;
   background-color: white;
   border-radius: 1em;
+  width: 100%;
+  max-width: max-content;
+  min-width: min-content;
+  align-items:left;
+  justify-content: left;
 }
 
 .group {
-    margin: 1em;
+  display: flexbox;
+  margin: 1em;
+  justify-content: left;
+  align-content: flex-start;
+}
+
+.labelStyle {
+  display: flex;
 }
 
   label {
@@ -55,7 +67,6 @@
   
   .button {
     margin-top: 1.4em;
-     margin-left: 1em; 
   }
 
   .searchTerm {

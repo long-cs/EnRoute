@@ -1,6 +1,6 @@
-import React, {useState, useEffect, Image} from 'react'
-import { Form, FormGroup, Label, Button, Card, CardImg, CardImgOverlay} from 'reactstrap'
-import { TextField, Grid, Box, Fade } from '@material-ui/core'
+import React, {useState, useEffect} from 'react'
+import { Form, FormGroup, Label, Button, CardImg} from 'reactstrap'
+import { TextField, Box, Fade } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import axios from 'axios'
@@ -17,14 +17,12 @@ const SearchForm = (props) => {
     const [yelpAuto, setYelpAuto] = useState([])
     const [backgroundImages, setBackgroundImages] = useState([])
     const [currBgImgIndx, setCurrBgImgIndx] = useState(0) // current background image index
-    const [currBgImgFilePath, setCurrBgImgFilePath] = useState("")
     const [onMounted,setMounted] = useState(true)
 
     useEffect(() => {
         if (window.innerWidth >= 724) {
             const bgImages = importAll(require.context('./images/', false, /\.(png|jpe?g|svg)$/))
             setBackgroundImages(bgImages)
-            setCurrBgImgFilePath(bgImages[0]['default'])
             console.log(bgImages)
         }
     }, [])
@@ -58,8 +56,10 @@ const SearchForm = (props) => {
     }
 
     return ( 
-
         <Box height='100vh' width='100vw'>
+            {
+                // Load in the first back ground image
+            }
             <Fade in={onMounted} appear={false} timeout={imgFadeDuration}>
                 <Box 
                     component='img'
@@ -77,10 +77,10 @@ const SearchForm = (props) => {
             </Fade>
             { 
                 //Background Images
+                //Images fade in and out
             }
             {backgroundImages.map((image, index) => (
                 <Fade in={index === currBgImgIndx} timeout={imgFadeDuration}>
-                    {/* <BackgroundImage image={image['default']}/> */}
                     <Box 
                         component='img'
                         sx={{
@@ -96,29 +96,34 @@ const SearchForm = (props) => {
                     </Box>                      
                 </Fade>
             ))}   
+            
+            <Box height='100vh' width='100vw'
+                display="flex"
+                justifyContent="center"
+                alignItems="center" 
+                position='relative'>
 
-            <div className='root'>
                 <Form className='form' onSubmit={handleSubmit}>
                     <Box display="flex"
                             justifyContent="center"
                             alignItems="center">
                         {
-                         //Logo Image 
+                        //Logo Image 
                         }
                         <CardImg style={{width:'50%',maxWidth:'800px'}} src={logo}/>
                     </Box>                            
 
                     <FormGroup className='group'>
-                        <Label for='startingLocation'> Starting Address </Label>
+                        <Label className='labelStyle' for='startingLocation'> Starting Address </Label>
                         <GooglePlacesAutocomplete 
                             apiKey={API_KEY}
                             selectProps={{currentStart, onChange: setCurrentStart,}}
                             withSessionToken={true}
-                        />
+                        />                            
                     </FormGroup>                            
 
                     <FormGroup className='group'>
-                        <Label for='destination'> Destination </Label>
+                        <Label className='labelStyle' for='destination'> Destination </Label>
                         <GooglePlacesAutocomplete 
                             apiKey={API_KEY}
                             selectProps={{currentEnd, onChange: setCurrentEnd,}}
@@ -127,7 +132,7 @@ const SearchForm = (props) => {
                     </FormGroup>                            
 
                     <FormGroup className='group'>
-                        <Label for='pointOfInterest' style={{marginBottom: '4px'}}> Point of Interest </Label>
+                        <Label className='labelStyle' for='pointOfInterest' style={{marginBottom: '4px'}}> Point of Interest </Label>
                         <Autocomplete id="searchTerm" freesolo="true" options={yelpAuto}
                         onChange={(e, fullSearchTerm) => setSearchTerm(fullSearchTerm)}
                         onInputChange={(e, newSearchTerm) => handleChangeYelp(newSearchTerm)}
@@ -136,8 +141,8 @@ const SearchForm = (props) => {
                     </FormGroup>                            
 
                     <Button className='button' type="submit">Search</Button>                        
-                </Form>
-            </div>
+                </Form> 
+            </Box>
         </Box> 
     )
 };
