@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
 import { Form, FormGroup, Label, Button, Card ,CardImg} from 'reactstrap'
 import { TextField, Box, Fade } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
@@ -10,7 +10,21 @@ import logo from '../../logo.png'
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API
 const imgFadeDuration = 10000 // 10 seconds
 
+function useWindowSize() {
+    const [size, setSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+  }
+
 const SearchForm = (props) => {
+    const [width, height] = useWindowSize();
     const [currentStart, setCurrentStart] = useState("")
     const [currentEnd, setCurrentEnd] = useState("")
     const [searchTerm, setSearchTerm] = useState("")
@@ -20,11 +34,10 @@ const SearchForm = (props) => {
     const [onMounted,setMounted] = useState(true)
 
     useEffect(() => {
-        if (window.innerWidth >= 724) {
+        // if (window.innerWidth >= 724) {
             const bgImages = importAll(require.context('./images/', false, /\.(png|jpe?g|svg)$/))
             setBackgroundImages(bgImages)
-            console.log(bgImages)
-        }
+        // }
     }, [])
 
     useEffect(() => {        
@@ -101,7 +114,9 @@ const SearchForm = (props) => {
                 display="flex"
                 justifyContent="center"
                 alignItems="center" 
-                position='relative'>
+                position='absolute'
+                bgcolor={width <= 640  ? 'white' : 'transparent'}
+                >
 
                 <Form className='form' onSubmit={handleSubmit}>
                     <Box display="flex"
@@ -110,7 +125,7 @@ const SearchForm = (props) => {
                         {
                         //Logo Image 
                         }                        
-                        <CardImg style={{ width:'50%', maxWidth:'40rem'}} src={logo}/>
+                        <CardImg style={{ width:'50%', maxWidth:'640px'}} src={logo}/>
                     </Box>                            
 
                     <FormGroup className='group'>
