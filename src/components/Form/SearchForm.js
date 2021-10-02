@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Form, FormGroup, Label, Button, CardImg} from 'reactstrap'
+import { Form, FormGroup, Label, Button, Card ,CardImg} from 'reactstrap'
 import { TextField, Box, Fade } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
@@ -95,7 +95,7 @@ const SearchForm = (props) => {
                         src={image['default']}>
                     </Box>                      
                 </Fade>
-            ))}   
+            ))}
             
             <Box height='100vh' width='100vw'
                 display="flex"
@@ -109,8 +109,8 @@ const SearchForm = (props) => {
                             alignItems="center">
                         {
                         //Logo Image 
-                        }
-                        <CardImg style={{width:'50%',maxWidth:'800px'}} src={logo}/>
+                        }                        
+                        <CardImg style={{ width:'50%', maxWidth:'40rem'}} src={logo}/>
                     </Box>                            
 
                     <FormGroup className='group'>

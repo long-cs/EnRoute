@@ -43,9 +43,7 @@
   padding: 1em;
   background-color: white;
   border-radius: 1em;
-  width: 100%;
-  max-width: max-content;
-  min-width: min-content;
+  width: fit-content;
   align-items:left;
   justify-content: left;
 }
