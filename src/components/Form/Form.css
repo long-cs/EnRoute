@@ -53,6 +53,7 @@
   margin: 1em;
   justify-content: left;
   align-content: flex-start;
+  text-align: left;
 }
 
 .labelStyle {
