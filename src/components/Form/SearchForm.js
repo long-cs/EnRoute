@@ -68,6 +68,11 @@ const SearchForm = (props) => {
         }
     }
 
+    if (API_KEY === undefined)
+    {
+        console.log("Missing API Key")
+        return null
+    }
     return ( 
         <Box height='100vh' width='100vw'>
             {
@@ -127,7 +132,6 @@ const SearchForm = (props) => {
                         }                        
                         <CardImg style={{ width:'50%', maxWidth:'640px'}} src={logo}/>
                     </Box>                            
-
                     <FormGroup className='group'>
                         <Label className='labelStyle' for='startingLocation'> Starting Address </Label>
                         <GooglePlacesAutocomplete 
@@ -155,7 +159,7 @@ const SearchForm = (props) => {
                         />
                     </FormGroup>                            
 
-                    <Button className='button' type="submit">Search</Button>                        
+                    <Button className='button' type="submit">Search</Button>
                 </Form> 
             </Box>
         </Box> 
