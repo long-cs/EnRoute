@@ -13,9 +13,9 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 ReactDOM.render(
   //  "proxy": "http://184.169.242.37:8000",
-  // <React.StrictMode>
-    <App />
-  // </React.StrictMode>
+  <React.StrictMode>
+    <App/>
+  </React.StrictMode>
   ,
   document.getElementById('root')
 );
