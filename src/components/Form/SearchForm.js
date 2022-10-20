@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react'
-import { Form, FormGroup, Label, Button, Card ,CardImg} from 'reactstrap'
+import { Form, FormGroup, Label, Button ,CardImg} from 'reactstrap'
 import { TextField, Box, Fade } from '@material-ui/core'
 import {Autocomplete, } from '@material-ui/lab'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
@@ -55,7 +55,7 @@ const SearchForm = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        props.handleSearch(currentStart.label,currentEnd.label,searchTerm)
+        props.handleSearch(currentStart.label,currentEnd.label,searchTerm)        
     }
 
     const handleChangeYelp = (newSearchTerm) => {

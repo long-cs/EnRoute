@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef, useMemo} from 'react';
-import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow} from 'google-maps-react';
+import { Map, GoogleApiWrapper, Polyline, Marker, InfoWindow, LatLng} from 'google-maps-react';
 import { Typography} from '@material-ui/core';
 import polyline from "polyline"
 import './Map.css'
@@ -31,7 +31,6 @@ const Maps = (props) => {
     showingInfoWindow: false
   })
   const [styles, setStyles] = useState(window.innerWidth >= 640 ? mapStyles : smallMapStyles)
-  const [currID, setCurrID] = useState("here")
   const [fullCoords,setFullCoords] = useState([])
   const [bounds, setBounds] = useState(null)
   const [center, setCenter] = useState(fullCoords[0]) 
@@ -63,12 +62,13 @@ const Maps = (props) => {
 
   useEffect(() => {
     // when first mounted, scoll to results
-    mapRef.current.scrollIntoView()
+    // mapRef.current.scrollIntoView()
 
     let fullCoordsArr = []
     var boundsGoogle = new props.google.maps.LatLngBounds()
 
-    for (let i = 0; i < props.polyline.length; i++) {
+    if(!props.reset)  {
+      for (let i = 0; i < props.polyline.length; i++) {
       let directionCoords = polyline.decode(props.polyline[i])
       const pathList = []
       for (let j = 0; j < directionCoords.length; j++) {
@@ -79,14 +79,18 @@ const Maps = (props) => {
         pathList.push(coord)
         boundsGoogle.extend(coord)
       }
-      fullCoordsArr = fullCoordsArr.concat(pathList) 
+      fullCoordsArr = fullCoordsArr.concat(pathList)
     }
+  }
 
-    // set state on first mounted
-    setFullCoords(fullCoordsArr)
-    setBounds(boundsGoogle)
-    setCenter(fullCoordsArr[0])
-    }, [props.google.maps.LatLngBounds, props.polyline])
+  var centerLatLng = boundsGoogle.getCenter()
+
+  // set state on first mounted
+  setFullCoords(fullCoordsArr)
+  setBounds(boundsGoogle)
+  setCenter(centerLatLng)
+
+    }, [props.google.maps.LatLngBounds, props.polyline,props.reset])
 
   // for loop the polty
   // use Memo will only rerender the map if the dependancy props in the array have been changed
@@ -152,7 +156,7 @@ const Maps = (props) => {
               </InfoWindow>          
         </Map>
       </div>
-  ,[ center, bounds, props.startAddress, props.destination, props.polyline, props.businesses, props.currID]) // only rerender when these props has changed
+  ,[ center, bounds, props.startAddress, props.destination, props.polyline, props.businesses, props.currID,props.reset]) // only rerender when these props has changed
 };
 
 export default GoogleApiWrapper({ apiKey: process.env.REACT_APP_GOOGLE_MAPS_API })(Maps)

@@ -8,23 +8,26 @@ function App() {
   const [startAddress, setStartAddress] = useState("")
   const [destination, setDestination] = useState("")
   const [showResults, setShowResults] = React.useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
+  // const [searchTerm, setSearchTerm] = useState('')
   const [polyline, setPolyline] = useState("")
+  const [reset, setReset] = useState(true)
 
   function handleSearch(startLocation, endLocation, searchTerm) {
+    setReset(true)
     if( !startLocation  && !endLocation) {
        // It got really annoying retyping start and stop, REMOVE LATER
       startLocation = 'Los Angeles'
       endLocation = 'Santa Monica'
     }
     
-
     setStartAddress(startLocation)
     setDestination(endLocation)
-    setSearchTerm(searchTerm)
+    // setSearchTerm(searchTerm)
+    setPolyline("");
     axios
     .get(`/s/query?start=${startLocation}&end=${endLocation}&desc=${searchTerm}`)
     .then((res) => {  
+      setReset(false)
       setPolyline(res.data)
     })
     .catch((err) => console.log(err))
@@ -37,7 +40,8 @@ function App() {
       {showResults ?
         <Results startAddress={startAddress} 
                   destination={destination} 
-                  polyline={polyline}/> 
+                  polyline={polyline}
+                  reset={reset}/> 
         : null
       }
     </div>
