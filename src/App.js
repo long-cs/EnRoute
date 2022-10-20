@@ -30,7 +30,10 @@ function App() {
       setReset(false)
       setPolyline(res.data)
     })
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.log(err)
+      console.log(err.toJSON())
+    })
     setShowResults(true)
   }
 
