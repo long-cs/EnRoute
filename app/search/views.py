@@ -21,23 +21,16 @@ class Query(View):
         self.gmapsClient = googlemaps.Client(gmapsKey)
         self.yelpClient = YelpClient(yelpApiKey)
 
-    def get(self, request):                
+    def get(self, request):          
         # Captures URL parameters
-        start = request.GET.get("start", "")
-        end = request.GET.get('end', "")
-
-        desc = request.GET.get('desc', "")
-
-        if desc == "":
-            desc = "Restaurants"
-
-        # Request directions via public transit
-        now = datetime.now()
+        start = request.GET.get("start", "Los Angeles")
+        end = request.GET.get('end', "Santa Monica")
+        desc = request.GET.get('desc', "Restaurants")
 
         path = Directions()
         directions_result = self.gmapsClient.directions(start, end)
         curr_route = directions_result[0]['legs'][0]
-        waypoint_distance = curr_route["distance"]["value"] // 4
+        waypoint_distance = curr_route["distance"]["value"] // 12
         waypoint = []
         curr_distance = 0
         last_coord = None
@@ -46,6 +39,7 @@ class Query(View):
 
         for step in curr_route['steps']:
             path_coords = polyline.decode(step['polyline']['points'])
+            # waypoint.append(path_coords[0])
             for i in path_coords:
                 if last_coord:
                     curr_distance += self.distanceBetweenCoord(last_coord[0], last_coord[1], i[0], i[1])
@@ -55,16 +49,13 @@ class Query(View):
                 last_coord = i    
             polyline_list.append(step['polyline']['points'])
         
-        yelpBuisnesses = []
-        for point in waypoint:
-            yelpResponse = self.yelpClient.searchBusiness(desc, point[0], point[1])
-            yelpBuisnesses.append(yelpResponse)
+        yelpBusinesses = self.yelpClient.searchBusinesses(description=desc, waypoints=waypoint)
 
         # populates the model instance
         path.setStartAddress(curr_route['start_address'])
         path.setDestination(curr_route['end_address'])
         path.setPolylineList(polyline_list)
-        path.setBuisnesses(yelpBuisnesses)
+        path.setBusinesses(yelpBusinesses)
 
         # NEEDS TO CONVERT FROM MODEL TO JSON
         pathJSONdata = json.dumps(path, indent=4, cls=DirectionEncoder)

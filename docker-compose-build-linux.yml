@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  web:
+    image: longmyapi/enroute_server:linux
+    build:
+      context: ./app
+    platform: linux/x86_64
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    expose: 
+      - 8000
+    env_file:
+      - .env_enroute
+  nginx:
+    image: longmyapi/nginx-proxy:linux
+    build: ./nginx
+    platform: linux/x86_64
+    ports:
+      - 8001:80
+    depends_on:
+      - web

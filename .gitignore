@@ -1,3 +1,5 @@
+*.pem
+
 # Git Ignore for Python/ django
 .env*
 
