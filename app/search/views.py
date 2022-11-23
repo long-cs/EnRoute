@@ -1,3 +1,4 @@
+import typing
 from django.shortcuts import render
 from googlemaps.directions import directions
 from rest_framework import viewsets
@@ -15,6 +16,9 @@ from django.core import serializers
 from django.conf import settings
 
 class Query(View):
+    MAX_BUSINESS_QUERIES_NUM = 12
+    MIN_BUSINESS_QUERIES_NUM = 4
+
     def __init__(self):
         gmapsKey = settings.GOOGLE_MAPS_API_KEY
         yelpApiKey = settings.YELP_API
@@ -30,7 +34,7 @@ class Query(View):
         path = Directions()
         directions_result = self.gmapsClient.directions(start, end)
         curr_route = directions_result[0]['legs'][0]
-        waypoint_distance = curr_route["distance"]["value"] // 12
+        waypoint_distance, searchRadius = self.distanceBetweenBusinessQueries(totalMeterLength=curr_route["distance"]["value"] )
         waypoint = []
         curr_distance = 0
         last_coord = None
@@ -49,7 +53,7 @@ class Query(View):
                 last_coord = i    
             polyline_list.append(step['polyline']['points'])
         
-        yelpBusinesses = self.yelpClient.searchBusinesses(description=desc, waypoints=waypoint)
+        yelpBusinesses = self.yelpClient.searchBusinesses(description=desc, waypoints=waypoint, searchRadius=searchRadius)
 
         # populates the model instance
         path.setStartAddress(curr_route['start_address'])
@@ -73,6 +77,18 @@ class Query(View):
         a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
         c = 2 * asin(sqrt(a))
         return 6371000 * c
+    
+    def distanceBetweenBusinessQueries(self, totalMeterLength: int) -> typing.Tuple[int,int]:
+        numOfSearches = int(totalMeterLength / YelpClient.MAX_SEARCH_RADIUS)
+        if numOfSearches > Query.MAX_BUSINESS_QUERIES_NUM:
+            numOfSearches = Query.MAX_BUSINESS_QUERIES_NUM
+            
+        if numOfSearches < Query.MIN_BUSINESS_QUERIES_NUM:
+            numOfSearches = Query.MIN_BUSINESS_QUERIES_NUM
+
+        distanceBetweenQueries = totalMeterLength / numOfSearches
+        searchRadius = distanceBetweenQueries if distanceBetweenQueries < YelpClient.MAX_SEARCH_RADIUS else YelpClient.MAX_SEARCH_RADIUS
+        return distanceBetweenQueries, int(searchRadius)
 
 class AutoComplete(View):
     '''

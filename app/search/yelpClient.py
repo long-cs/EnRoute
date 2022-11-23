@@ -18,20 +18,20 @@ class YelpClient:
     AUTOCOMPLETE_PATH = "/v3/autocomplete"
     MIN_STAR_RATING = 3
     MIN_REVIEW_COUNT = 10
-    SEARCH_RADIUS = 40000 # 40000 meters (~25 miles)
+    MAX_SEARCH_RADIUS = 40000 # 40000 meters (~25 miles)
 
     def __init__(self, apiKey):
         self._session = requests.Session()
         self._session.headers.update(self._getAuthHeader(apiKey))
 
-    def searchBusinesses(self, description : str,waypoints : list):
+    def searchBusinesses(self, description : str,waypoints : list, searchRadius: int = MAX_SEARCH_RADIUS):
         retBusinesses = []
 
         try:
             #higher max workers would mean more concurrent yelp api calls
             #if max_workers is increased than yelp will deny api calls because there will be too many api calls at once
             with ThreadPoolExecutor(max_workers=3) as executor:                
-                for response in executor.map(self.searchBusiness, repeat(description), waypoints, timeout=120):
+                for response in executor.map(self.searchBusiness, repeat(description), waypoints, repeat(searchRadius), timeout=120):
                     if response is not None:
                         retBusinesses.append(response)
         except TimeoutError:
@@ -41,7 +41,7 @@ class YelpClient:
 
         return retBusinesses
 
-    def searchBusiness(self, searchTerm : str, latLon ):
+    def searchBusiness(self, searchTerm : str, latLon, searchRadius: int = MAX_SEARCH_RADIUS):
         lat = latLon[0]
         lon = latLon[1]
 
@@ -50,7 +50,7 @@ class YelpClient:
                       'latitude':lat, 
                       'longitude':lon,
                       'sort_by': "best_match",
-                      'radius' : YelpClient.SEARCH_RADIUS,
+                      'radius' : searchRadius,
                       'limit': 50}
         # doc has alot of diff options need to look into ex. radius, limit, sort_by, etc
         retResponse = None
