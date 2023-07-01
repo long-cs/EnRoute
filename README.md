@@ -1,8 +1,8 @@
-Make Virtual Enviroment\
-virtual enviroemnt example
+Make Virtual Environment\
+virtual environment example
 
 # Creates the virtual env
-mkvirtualenv {Enviroment Name}
+mkvirtualenv {Environment Name}
 
 # Installs dependencies
 pip install -r requirements.txt
@@ -10,11 +10,11 @@ pip install -r requirements.txt
 # Update list of dependencies
 pip freeze > requirements.txt
 
-# Set up Enviroment Variables
+# Set up Environment Variables
 API KEYS\
 <ins>Docker</ins>\
 Create a env file with any name. ex. "env_enroute"\
-The file's contents should have these 2 lines\
+The file's contents should have these lines\
 GOOGLE_MAPS_API_KEY={API_KEY}\
 YELP_API_KEY={API_KEY}\
 After building the docker image, you must pass in the env file when running the docker image\
@@ -28,8 +28,10 @@ Go to .../virtualenvs/{Name of virtual env}/bin/postactivate\
 append these lines to the postactivate file\
 export GOOGLE_MAPS_API_KEY='{API KEY}'\
 export YELP_API_KEY='{API KEY}'
+export AWS_ACCESS_KEY_ID="{AWS_ACCESS_KEY_ID}"
+export AWS_SECRET_ACCESS_KEY="{AWS_SECRET_ACCESS_KEY}" // for zappa
 
-Got to .../virtualenvs/{Name of virtual env}/bin/postdeactivate\
+Go to .../virtualenvs/{Name of virtual env}/bin/postdeactivate\
 append these lines to the postdeactivate file\
 unset GOOGLE_MAPS_API_KEY\
 unset YELP_API_KEY
@@ -46,9 +48,5 @@ unset GOOGLE_MAPS_API_KEY\
 unset YELP_API_KEY
 
 # Production
-docker-compose -f docker-compose.dev.yml down -v  // This will close docker instance \
-docker-compose -f docker-compose.dev.yml up -d --build 
-
-Production Build\
-docker-compose down -v  // This will close docker instance \
-docker-compose up -d --build 
+zappa update dev
+zappa deploy dev
