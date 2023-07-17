@@ -1,3 +1,5 @@
+Python 3.9.12 was used for development
+
 Make Virtual Environment\
 virtual environment example
 
