@@ -98,7 +98,7 @@ const SearchForm = (props) => {
                 //Images fade in and out
             }
             {backgroundImages.map((image, index) => (
-                <Fade in={index === currBgImgIndx} timeout={imgFadeDuration}>
+                <Fade key={index} in={index === currBgImgIndx} timeout={imgFadeDuration}>
                     <Box 
                         component='img'
                         sx={{
