@@ -2,6 +2,7 @@ import React, {useEffect, useState, useRef} from 'react'
 import Map from './Map/Map'
 import Businesses from './Businesses/Businesses'
 import { Grid } from '@material-ui/core';
+
 // sets a limit that the function that's passed in is limited to execute every x ms
 // used when resizing Height for Businesses. Resizing for every single pixel lags the browser a bit
 function debounce(fn, ms) {
