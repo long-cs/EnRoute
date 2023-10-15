@@ -5,6 +5,7 @@ import polyline from "polyline"
 import './Map.css'
 import {Button} from 'reactstrap'
 import MapMarker from './MapMarker'
+
 const mapStyles = {
   width: '100%',
   height: '100%',
