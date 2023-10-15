@@ -8,7 +8,6 @@ function App() {
   const [startAddress, setStartAddress] = useState("")
   const [destination, setDestination] = useState("")
   const [showResults, setShowResults] = React.useState(false)
-  // const [searchTerm, setSearchTerm] = useState('')
   const [polyline, setPolyline] = useState("")
   const [reset, setReset] = useState(true)
 
@@ -22,7 +21,6 @@ function App() {
     
     setStartAddress(startLocation)
     setDestination(endLocation)
-    // setSearchTerm(searchTerm)
     setPolyline("");
     axios
     .get(`/s/query?start=${startLocation}&end=${endLocation}&desc=${searchTerm}`)
